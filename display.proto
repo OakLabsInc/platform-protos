@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package oakplatform.display;
+
+service Display {
+  rpc Info (google.protobuf.Empty) returns (DisplayInformation) {}
+  rpc Configure (ConfigurationRequest) returns (google.protobuf.Empty) {}
+  rpc ConfigureGlobal (GlobalConfiguration) returns (google.protobuf.Empty) {}
+}
+
+message DisplayInformation {
+  GlobalConfiguration global_configuration = 1;
+  repeated Display displays = 2;
+
+  message Display {
+    string display_id = 1;
+    DisplayConfiguration configuration = 2;
+    string preferred_mode = 3;
+    repeated string available_modes = 4;
+  }
+}
+
+message ConfigurationRequest {
+  string display_id = 1;
+  DisplayConfiguration configuration = 2;
+}
+
+message DisplayConfiguration {
+  bool enabled = 1;
+  string mode = 2;
+  Reflect reflect = 3;
+  Rotate rotate = 4;
+  string transform = 5;
+
+  enum Reflect {
+    NO_REFLECT = 0;
+    X = 1;
+    Y = 2;
+    XY = 3;
+  }
+  enum Rotate {
+    NO_ROTATE = 0;
+    LEFT = 1;
+    RIGHT = 2;
+    INVERTED = 3;
+  }
+}
+
+message GlobalConfiguration {
+  uint32 dpi = 1;
+}

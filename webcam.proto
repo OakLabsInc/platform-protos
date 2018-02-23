@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package oak.platform;
+
+service Webcam {
+  rpc Info (google.protobuf.Empty) returns (WebcamInformation) {}
+  rpc StartStream (StreamRequest) returns (Stream) {}
+  rpc StopStream (StreamRequest) returns (google.protobuf.Empty) {}
+}
+
+message WebcamInformation {
+  repeated Webcam webcams = 1;
+  message Webcam {
+    string webcam_id = 1;
+    repeated string available_modes = 3;
+  }
+}
+
+message StreamRequest {
+  string webcam_id = 1;
+  string mode = 2;
+  string port = 3;
+}
+
+message Stream {
+  string url = 1;
+}

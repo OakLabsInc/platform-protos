@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package oak.platform;
+
+service Audio {
+  rpc Info (google.protobuf.Empty) returns (AudioInformation) {}
+  rpc Control (ControlRequest) returns (google.protobuf.Empty) {}
+}
+
+message AudioInformation {
+  repeated Mixer mixers = 1;
+  message Mixer {
+    string mixer_id = 1;
+    AudioSettings settings = 2;
+  }
+}
+
+message ControlRequest {
+  string mixer_id = 2;
+  AudioSettings settings = 3;
+}
+
+message AudioSettings {
+  bool mute = 1;
+  uint32 volume = 2;
+}

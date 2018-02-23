@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package oak.platform;
+
+service OakLights {
+  rpc Info (google.protobuf.Empty) returns (OakLightsInformation) {}
+  rpc ChangeColor (ChangeColorRequest) returns (google.protobuf.Empty) {}
+  rpc FlashBoard (ControllerID) returns (google.protobuf.Empty) {}
+}
+
+message OakLightsInformation {
+  repeated OakLights controllers = 1;
+  message OakLights {
+    string controller_id = 1;
+  }
+}
+
+message ChangeColorRequest {
+  string controller_id = 1;
+  oneof color {
+    Color rgb = 2;
+    string hex = 3;
+  }
+  uint32 white = 4;
+  uint32 duration = 5;
+
+  message Color {
+    uint32 r = 1;
+    uint32 g = 2;
+    uint32 b = 3;
+  }
+}
+
+message ControllerID {
+  string controller_id = 1;
+}

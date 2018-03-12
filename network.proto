@@ -6,26 +6,24 @@ package oak.platform;
 
 service Network {
   rpc Info (google.protobuf.Empty) returns (Information) {}
-  rpc Connect (Connection) returns (google.protobuf.Empty) {}
-  rpc ListAccessPoints (DeviceID) returns (AccessPointList) {}
-  rpc ListConnections (google.protobuf.Empty) returns (google.protobuf.Empty) {}
+
+  rpc WiFiScan (google.protobuf.Empty) returns (WiFiScanResults) {}
+  rpc AddWiFi (WiFiConnectionSettings) returns (google.protobuf.Empty) {}
+  rpc ForgetWiFi (WiFiConnectionSettings) returns (google.protobuf.Empty) {}
+  rpc ListKnownWiFiNetworks (google.protobuf.Empty) returns (WiFiNetworkList) {}
 }
 
 message Information {
   repeated Device devices = 1;
-  repeated Connection connections = 2;
   message Device {
     string device_id = 1;
     Technology technology = 2;
     string hardware_address = 3;
     string state = 4;
-    repeated string addresses = 5;
-    string gateway = 6;
-  }
-  message Connection {
-    string connection_id = 1;
-    Technology technology = 2;
-    string ssid = 3;
+    string connection_id = 5;
+    string ssid = 6;
+    repeated string addresses = 7;
+    string gateway = 8;
   }
   enum Technology {
     UNKNOWN = 0;
@@ -34,23 +32,20 @@ message Information {
   }
 }
 
-message DeviceID {
-  string device_id = 1;
-}
-
-message AccessPointList {
-  repeated AccessPoint access_points = 1;
+message WiFiScanResults {
+  repeated AccessPoint visible_access_points = 1;
   message AccessPoint {
     string ssid = 1;
-    string frequency = 2;
-    string hardware_address = 3;
-    uint32 strength_percent = 4;
-    string mode = 5;
+    string hardware_address = 2;
+    uint32 strength_percent = 3;
   }
 }
 
-message Connection {
-  string device_id = 1;
-  string ssid = 2;
-  string passphrase = 3;
+message WiFiConnectionSettings {
+  string ssid = 1;
+  string passphrase = 2;
+}
+
+message WiFiNetworkList {
+  repeated WiFiConnectionSettings wifi_networks = 2;
 }

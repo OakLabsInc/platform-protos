@@ -5,31 +5,6 @@ import "google/protobuf/timestamp.proto";
 
 package oak.platform;
 
-service Host {
-  rpc Info (google.protobuf.Empty) returns (HostInformation) {}
-  rpc ListModules (google.protobuf.Empty) returns (ModuleStatusList) {}
-  rpc SetActiveModules (ModuleList) returns (google.protobuf.Empty) {}
-  rpc Reboot (google.protobuf.Empty) returns (google.protobuf.Empty) {}
-}
-
-message HostInformation {
-  string hostname = 1;
-  google.protobuf.Timestamp time = 2;
-  string timezone = 3;
-}
-
-message ModuleStatusList {
-  repeated ModuleStatus modules = 1;
-  message ModuleStatus {
-    string module_id = 1;
-    bool active = 2;
-  }
-}
-
-message ModuleList {
-  repeated string module_ids = 1;
-}
-
 service Application {
   rpc Status (google.protobuf.Empty) returns (ApplicationStatus) {}
   rpc Start (google.protobuf.Empty) returns (google.protobuf.Empty) {}

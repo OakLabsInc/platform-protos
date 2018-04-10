@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package oak.platform;
+
+service Touch {
+  rpc Info (google.protobuf.Empty) returns (TouchInformation) {}
+  rpc Calibrate (TouchCalibrationRequest) returns (TouchCalibration) {}
+}
+
+message TouchInformation {
+  repeated TouchDevice touch_devices = 1;
+  message TouchDevice {
+    string touch_device_id = 1;
+    TouchCalibration calibration = 2;
+  }
+}
+
+message TouchCalibrationRequest {
+  string touch_device_id = 1;
+  TouchCalibration calibration = 2;
+}
+
+message TouchCalibration {
+  string parameters = 1;
+  bool swap_axes = 2;
+}

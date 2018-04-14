@@ -6,23 +6,23 @@ package oak.platform;
 
 service Audio {
   rpc Info (google.protobuf.Empty) returns (AudioInformation) {}
-  rpc Control (ControlRequest) returns (google.protobuf.Empty) {}
+  rpc Configure (AudioConfigurationRequest) returns (google.protobuf.Empty) {}
 }
 
 message AudioInformation {
   repeated Mixer mixers = 1;
   message Mixer {
     string mixer_id = 1;
-    AudioSettings settings = 2;
+    AudioConfiguration settings = 2;
   }
 }
 
-message ControlRequest {
-  string mixer_id = 2;
-  AudioSettings settings = 3;
+message AudioConfigurationRequest {
+  string mixer_id = 1;
+  AudioConfiguration settings = 2;
 }
 
-message AudioSettings {
+message AudioConfiguration {
   bool mute = 1;
   uint32 volume = 2;
 }

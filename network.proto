@@ -5,7 +5,7 @@ import "google/protobuf/empty.proto";
 package oak.platform;
 
 service Network {
-  rpc Info (google.protobuf.Empty) returns (Information) {}
+  rpc Info (google.protobuf.Empty) returns (NetworkInformation) {}
 
   rpc WiFiScan (google.protobuf.Empty) returns (WiFiScanResults) {}
   rpc AddWiFi (WiFiConnectionSettings) returns (google.protobuf.Empty) {}
@@ -13,7 +13,7 @@ service Network {
   rpc ListKnownWiFiNetworks (google.protobuf.Empty) returns (WiFiNetworkList) {}
 }
 
-message Information {
+message NetworkInformation {
   repeated Device devices = 1;
   message Device {
     string device_id = 1;

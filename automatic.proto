@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+import "audio.proto";
+import "display.proto";
+import "network.proto";
+import "touch.proto";
+
+
+package oak.platform;
+
+service Automatic {
+  rpc Store (Configuration) returns (google.protobuf.Empty) {}
+  rpc View (google.protobuf.Empty) returns (Configuration) {}
+  rpc Apply (google.protobuf.Empty) returns (google.protobuf.Empty) {}
+}
+
+message Configuration {
+  repeated oak.platform.AudioConfigurationRequest audio = 1;
+  repeated oak.platform.DisplayConfigurationRequest display = 2;
+  oak.platform.DisplayGlobalConfiguration display_global = 3;
+  repeated oak.platform.WiFiConnectionSettings wifi = 4;
+  repeated oak.platform.TouchConfigurationRequest touch = 5;
+}

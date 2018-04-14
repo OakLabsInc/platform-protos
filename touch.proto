@@ -6,23 +6,23 @@ package oak.platform;
 
 service Touch {
   rpc Info (google.protobuf.Empty) returns (TouchInformation) {}
-  rpc Calibrate (TouchCalibrationRequest) returns (TouchCalibration) {}
+  rpc Configure (TouchConfigurationRequest) returns (TouchConfiguration) {}
 }
 
 message TouchInformation {
   repeated TouchDevice touch_devices = 1;
   message TouchDevice {
     string touch_device_id = 1;
-    TouchCalibration calibration = 2;
+    TouchConfiguration configuration = 2;
   }
 }
 
-message TouchCalibrationRequest {
+message TouchConfigurationRequest {
   string touch_device_id = 1;
-  TouchCalibration calibration = 2;
+  TouchConfiguration configuration = 2;
 }
 
-message TouchCalibration {
+message TouchConfiguration {
   string parameters = 1;
   bool swap_axes = 2;
 }

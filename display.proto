@@ -2,16 +2,16 @@ syntax = "proto3";
 
 import "google/protobuf/empty.proto";
 
-package oakplatform.display;
+package oak.platform;
 
 service Display {
   rpc Info (google.protobuf.Empty) returns (DisplayInformation) {}
-  rpc Configure (ConfigurationRequest) returns (google.protobuf.Empty) {}
-  rpc ConfigureGlobal (GlobalConfiguration) returns (google.protobuf.Empty) {}
+  rpc Configure (DisplayConfigurationRequest) returns (google.protobuf.Empty) {}
+  rpc ConfigureGlobal (DisplayGlobalConfiguration) returns (google.protobuf.Empty) {}
 }
 
 message DisplayInformation {
-  GlobalConfiguration global_configuration = 1;
+  DisplayGlobalConfiguration global_configuration = 1;
   repeated Display displays = 2;
 
   message Display {
@@ -22,7 +22,7 @@ message DisplayInformation {
   }
 }
 
-message ConfigurationRequest {
+message DisplayConfigurationRequest {
   string display_id = 1;
   DisplayConfiguration configuration = 2;
 }
@@ -48,6 +48,6 @@ message DisplayConfiguration {
   }
 }
 
-message GlobalConfiguration {
+message DisplayGlobalConfiguration {
   uint32 dpi = 1;
 }

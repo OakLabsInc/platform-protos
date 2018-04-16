@@ -23,6 +23,6 @@ message TouchConfigurationRequest {
 }
 
 message TouchConfiguration {
-  string parameters = 1;
+  string calibration = 1;
   bool swap_axes = 2;
 }

@@ -13,13 +13,13 @@ message AudioInformation {
   repeated Mixer mixers = 1;
   message Mixer {
     string mixer_id = 1;
-    AudioConfiguration settings = 2;
+    AudioConfiguration configuration = 2;
   }
 }
 
 message AudioConfigurationRequest {
   string mixer_id = 1;
-  AudioConfiguration settings = 2;
+  AudioConfiguration configuration = 2;
 }
 
 message AudioConfiguration {

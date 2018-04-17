@@ -13,6 +13,7 @@ package oak.platform;
 service Automatic {
   rpc Store (Configuration) returns (google.protobuf.Empty) {}
   rpc View (google.protobuf.Empty) returns (Configuration) {}
+  rpc Generate (google.protobuf.Empty) returns (Configuration) {}
   rpc Apply (google.protobuf.Empty) returns (google.protobuf.Empty) {}
 }
 

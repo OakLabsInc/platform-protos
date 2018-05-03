@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+// import "google/protobuf/empty.proto";
+
+package oak.platform;
+
+service OakRFID {
+  rpc Info (Empty) returns (OakRFIDInformation) {}
+  rpc Configure (OakRFIDConfigurationRequest) returns (Empty) {}
+  rpc Stream (OakRFIDStreamRequest) returns (stream OakRFIDEvent) {}
+  rpc FlashBoard (OakRFIDFlashBoardRequest) returns (Empty) {}
+}
+
+message Empty {
+}
+
+message TimeStamp {
+}
+
+message OakRFIDInformation {
+  repeated OakRFIDDevice rfid_devices = 1;
+  message OakRFIDDevice {
+    string rfid_device_id = 1;
+    OakRFIDConfiguration configuration = 2;
+  }
+}
+
+message OakRFIDStreamRequest {
+  string rfid_device_id = 1;
+}
+
+message OakRFIDEvent {
+  Event event = 1;
+  string epc = 2;
+  string upc = 3;
+  sint32 rssi = 4;  // non-positive
+
+  enum Event {
+    ENTER = 0;
+    EXIT = 1;
+  }
+}
+
+message OakRFIDFlashBoardRequest {
+  string rfid_device_id = 1;
+}
+
+message OakRFIDConfigurationRequest {
+  string rfid_device_id = 1;
+  OakRFIDConfiguration configuration = 2;
+}
+
+message OakRFIDConfiguration {
+  Parser parser = 1;
+  SearchMode search_mode = 2;
+  uint32 strength = 3;  // multiple of 25 in [1000,3225]
+  uint32 start_scan_interval = 4;  // ms
+  uint32 max_scan_interval = 5;  // ms
+  uint32 enter_threshold = 6;  // ms
+  uint32 exit_threshold = 7;  // ms
+
+  enum Parser {
+    RAW = 0;
+    UPC = 1;
+    UPC14 = 2;
+  }
+  enum SearchMode {
+    READER_SELECTED = 0;
+    DUAL_TARGET = 1;
+    SINGLE_TARGET = 2;
+    SINGLE_TARGET_WITH_SUPPRESSION = 3;
+  }
+}

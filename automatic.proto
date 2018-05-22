@@ -4,9 +4,9 @@ import "google/protobuf/empty.proto";
 
 import "audio.proto";
 import "display.proto";
+import "dotdashpay.proto";
 import "network.proto";
 import "touch.proto";
-
 
 package oak.platform;
 
@@ -24,4 +24,5 @@ message Configuration {
   oak.platform.DisplayGlobalConfiguration display_global = 3;
   repeated oak.platform.WiFiConnectionSettings wifi = 4;
   repeated oak.platform.TouchConfigurationRequest touch = 5;
+  oak.platform.DotDashPayConfiguration dotdashpay = 6;
 }

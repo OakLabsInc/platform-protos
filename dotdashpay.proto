@@ -1,19 +1,13 @@
 syntax = "proto3";
 
-// import "google/protobuf/empty.proto";
+import "google/protobuf/empty.proto";
 
 package oak.platform;
 
 service DotDashPay {
-  rpc Info (Empty) returns (DotDashPayInformation) {}
-  rpc Configure (DotDashPayConfiguration) returns (Empty) {}
+  rpc Info (google.protobuf.Empty) returns (DotDashPayInformation) {}
+  rpc Configure (DotDashPayConfiguration) returns (google.protobuf.Empty) {}
   rpc PerformTransaction (DotDashPayTransactionParameters) returns (DotDashPayTransaction) {}
-}
-
-message Empty {
-}
-
-message TimeStamp {
 }
 
 message DotDashPayInformation {

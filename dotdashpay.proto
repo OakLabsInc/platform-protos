@@ -18,6 +18,7 @@ message DotDashPayInformation {
 message DotDashPayConfiguration {
   Environment environment = 1;
   string api_key = 2;
+  string credentials_json = 3;
 
   enum Environment {
     UNKNOWN_ENVIRONMENT = 0;

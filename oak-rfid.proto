@@ -1,20 +1,14 @@
 syntax = "proto3";
 
-// import "google/protobuf/empty.proto";
+import "google/protobuf/empty.proto";
 
 package oak.platform;
 
 service OakRFID {
-  rpc Info (Empty) returns (OakRFIDInformation) {}
-  rpc Configure (OakRFIDConfigurationRequest) returns (Empty) {}
+  rpc Info (google.protobuf.Empty) returns (OakRFIDInformation) {}
+  rpc Configure (OakRFIDConfigurationRequest) returns (google.protobuf.Empty) {}
   rpc Stream (OakRFIDStreamRequest) returns (stream OakRFIDEvent) {}
-  rpc FlashBoard (OakRFIDFlashBoardRequest) returns (Empty) {}
-}
-
-message Empty {
-}
-
-message TimeStamp {
+  rpc FlashBoard (OakRFIDFlashBoardRequest) returns (google.protobuf.Empty) {}
 }
 
 message OakRFIDInformation {

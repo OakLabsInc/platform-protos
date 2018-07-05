@@ -5,7 +5,11 @@ import "google/protobuf/empty.proto";
 package oak.platform;
 
 service Touch {
+  /* Configure human touch interfaces including IR and capacitive sensors */
+
+  /* Lists touch interfaces that can be configured */
   rpc Info (google.protobuf.Empty) returns (TouchInformation) {}
+  /* Applies configuration to a touch interface */
   rpc Configure (TouchConfigurationRequest) returns (TouchConfiguration) {}
 }
 
@@ -23,6 +27,11 @@ message TouchConfigurationRequest {
 }
 
 message TouchConfiguration {
+  // four space-separated integers
   string calibration = 1;
+  // should be True if your touch interface is rotated LEFT or RIGHT
+  // relative to the display is overlays
+  // should be False if it is upright or inverted relative to the
+  // display it overlays
   bool swap_axes = 2;
 }

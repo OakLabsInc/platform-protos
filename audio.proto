@@ -5,7 +5,18 @@ import "google/protobuf/empty.proto";
 package oak.platform;
 
 service Audio {
+  /* Configure audio devices that are connected to the host.
+
+     Currently, only audio output devices are supported. */
+
+  /* Lists available mixers which correspond to connected audio
+     devices. Also shows the current configuration, i.e. volume and
+     mute settings.
+
+     You may have to guess-and-check to determine which mixer
+     corresponds to the physical device you want to control. */
   rpc Info (google.protobuf.Empty) returns (AudioInformation) {}
+  /* Applies configuration to an audio device, i.e. change the volume */
   rpc Configure (AudioConfigurationRequest) returns (google.protobuf.Empty) {}
 }
 
@@ -24,5 +35,7 @@ message AudioConfigurationRequest {
 
 message AudioConfiguration {
   bool mute = 1;
+  // must be between 0 and 100
+  // 0 is effictively mute and 100 is maximum volume
   uint32 volume = 2;
 }

@@ -7,7 +7,8 @@ package oak.platform;
 service Audio {
   /* Configure audio devices that are connected to the host.
 
-     Currently, only audio output devices are supported. */
+     Currently, only audio output devices are supported. Microphones
+     are not supported. */
 
   /* Lists available mixers which correspond to connected audio
      devices. Also shows the current configuration, i.e. volume and
@@ -35,7 +36,7 @@ message AudioConfigurationRequest {
 
 message AudioConfiguration {
   bool mute = 1;
-  // must be between 0 and 100
+  // Must be between 0 and 100 inclusive
   // 0 is effictively mute and 100 is maximum volume
   uint32 volume = 2;
 }

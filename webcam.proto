@@ -5,8 +5,22 @@ import "google/protobuf/empty.proto";
 package oak.platform;
 
 service Webcam {
+  /* Manage streams from webcams connected to the host.
+
+     The 'webcam' module must be activated before these RPCs are avaiable.
+
+     The ports between 9000 and 9999 inclusive are reserved for
+     starting webcam streams. */
+
+  /* Lists available webcams and the modes (resolution and frameate)
+     they support */
   rpc Info (google.protobuf.Empty) returns (WebcamInformation) {}
+  /* Starts a video stream served over HTTP at a returned url
+
+     A webcam can only have one stream at a time and a port can only
+     be used for one stream at a time. */
   rpc StartStream (StreamRequest) returns (Stream) {}
+  /* Stops a previously started stream from a specified camera */
   rpc StopStream (StreamRequest) returns (google.protobuf.Empty) {}
 }
 
@@ -20,10 +34,16 @@ message WebcamInformation {
 
 message StreamRequest {
   string webcam_id = 1;
+  // Specifies the resultion and framerate the camera should use for
+  // this stream. Must be a value from the 'available_modes' list for
+  // the specified webcam.
   string mode = 2;
+  // The port the stream should be served on. It is up to the caller
+  // to decide which available port to use.
   string port = 3;
 }
 
 message Stream {
+  // The local URL where a stream can be reached.
   string url = 1;
 }

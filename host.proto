@@ -18,7 +18,7 @@ service Host {
 
   /* Exposes hostname, current time and timezone of host */
   rpc Info (google.protobuf.Empty) returns (HostInformation) {}
-  /* Lists the avaialble Platform Modules and whether each is
+  /* Lists the available Platform Modules and whether each is
      currently active and providing functionality */
   rpc ListModules (google.protobuf.Empty) returns (ModuleStatusList) {}
   /* Enables the provided list of Platform Modules and disables those

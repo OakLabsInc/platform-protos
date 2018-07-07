@@ -9,15 +9,17 @@ service OakRFID {
 
      The 'oak-rfid' module must be activated before these RPCs are
      available.
-  */
 
-  /* Lists controllers that are connected to the host. */
+     'rfid_device_id' values come from serial numbers reported by the
+     RFID readers themselves. */
+
+  // Lists controllers that are connected to the host.
   rpc Info (google.protobuf.Empty) returns (OakRFIDInformation) {}
-  /* Configures a controller before streaming begins. */
+  // Configures a controller before streaming begins.
   rpc Configure (OakRFIDConfigurationRequest) returns (google.protobuf.Empty) {}
-  /* Streams events when RFID tags enter and exit range of the reader  */
+  // Streams events when RFID tags enter and exit range of the reader
   rpc Stream (OakRFIDStreamRequest) returns (stream OakRFIDEvent) {}
-  /* Installs firmware on the controller */
+  // Installs firmware on the controller
   rpc FlashBoard (OakRFIDFlashBoardRequest) returns (google.protobuf.Empty) {}
 }
 
@@ -70,7 +72,7 @@ message OakRFIDConfiguration {
      passes 'max_scan_interval' and then that is used as the interval.
 
      Tags are considered to have ENTERed view after they are detected
-     by every scan within a period lasting for the
+     by every scan within a period lasting for the asdf
      'enter_threshold'. Once they are considered in view, they EXIT
      view after they are NOT detected by every scan within a period
      lasting for the 'exit_threshold'.

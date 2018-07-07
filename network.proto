@@ -11,21 +11,19 @@ service Network {
      network connections cannot be altered and should be configured
      via DHCP. */
 
-  /* Shows network information for all Ethernet and WiFi devices,
-     including current network addresses and MAC addresses. */
+  // Shows network information for all Ethernet and WiFi devices,
+  // including current network addresses and MAC addresses.
   rpc Info (google.protobuf.Empty) returns (NetworkInformation) {}
 
-  /* Lists visible WiFi networks using the first available WiFi interface. */
+  // Lists visible WiFi networks using the first available WiFi interface
   rpc WiFiScan (google.protobuf.Empty) returns (WiFiScanResults) {}
-  /* Adds or overwrites configuration for connecting to a specific
-     WiFi network.
-
-     The host will then attempt to connect to the network whenever it
-     is available. */
+  // Adds or overwrites configuration for connecting to a specific
+  // WiFi network. The host will then attempt to connect to the
+  // network whenever it is available.
   rpc AddWiFi (WiFiConnectionSettings) returns (google.protobuf.Empty) {}
-  /* Removes stored WiFi configuration. */
+  // Removes stored WiFi configuration.
   rpc ForgetWiFi (WiFiConnectionSettings) returns (google.protobuf.Empty) {}
-  /* Lists the WiFi network configurations that are available to this host. */
+  // Lists the WiFi network configurations that are available to this host.
   rpc ListKnownWiFiNetworks (google.protobuf.Empty) returns (WiFiNetworkList) {}
 }
 
@@ -34,7 +32,8 @@ message NetworkInformation {
   message Device {
     string device_id = 1;
     Technology technology = 2;
-    string hardware_address = 3;  // AKA "MAC Address"
+    // aka "MAC Address"
+    string hardware_address = 3;
     // string state = 4;
     // string connection_id = 5;
     string ssid = 6;
@@ -61,7 +60,7 @@ message WiFiConnectionSettings {
   // Settings are WPA-PSK, also known as WPA-Personal.
   // This is currently all that is supported.
   string ssid = 1;
-  // 'passphrase' will be stored securley and CANNOT be retrieve via
+  // 'passphrase' will be stored securely and CANNOT be retrieved via
   // this service.
   string passphrase = 2;
 }

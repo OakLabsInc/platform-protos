@@ -8,13 +8,16 @@ service OakLights {
   /* Control an Oak USB Lighting Controller.
 
      The 'oak-lights' module must be activated before these RPCs are
-     avaiable. */
+     available.
 
-  /* Lists controllers that are connected to the host */
+     'controller_id' values come from serial numbers reported by the
+     light controllers themselves. */
+
+  // Lists controllers that are connected to the host
   rpc Info (google.protobuf.Empty) returns (OakLightsInformation) {}
-  /* Transitions the light color over a given amount of time. */
+  // Transitions the light color over a given amount of time
   rpc ChangeColor (ChangeColorRequest) returns (google.protobuf.Empty) {}
-  /* Installs firmware on the controller */
+  // Installs firmware on the controller
   rpc FlashBoard (ControllerID) returns (google.protobuf.Empty) {}
 }
 
@@ -39,7 +42,7 @@ message ChangeColorRequest {
   // The brightness of the white lights at end of transition.
   // Must be between 1 and 255 inclusive.
   uint32 white = 4;
-  // The time in miliseconds for the transition to take.
+  // The time in milliseconds for the transition to take.
   // Must be positive. For fastest transition possible, use 1.
   uint32 duration = 5;
 

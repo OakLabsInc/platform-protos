@@ -5,11 +5,14 @@ import "google/protobuf/empty.proto";
 package oak.platform;
 
 service Touch {
-  /* Configure human touch interfaces including IR and capacitive sensors */
+  /* Configure human touch interfaces including IR and capacitive sensors
 
-  /* Lists touch interfaces that can be configured */
+     'touch_device_id' values come from serial numbers reported by the
+     touch devices themselves. */
+
+  // Lists touch interfaces that can be configured
   rpc Info (google.protobuf.Empty) returns (TouchInformation) {}
-  /* Applies configuration to a touch interface */
+  // Applies configuration to a touch interface
   rpc Configure (TouchConfigurationRequest) returns (TouchConfiguration) {}
 }
 

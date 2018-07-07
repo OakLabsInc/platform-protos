@@ -16,22 +16,26 @@ service Host {
   If an attempt is made to use an rpc provided by a module that is not
   active it may return an 502 error. */
 
-  /* Exposes hostname, current time and timezone of host */
+  // Exposes hostname, current time and timezone of host
   rpc Info (google.protobuf.Empty) returns (HostInformation) {}
-  /* Lists the available Platform Modules and whether each is
-     currently active and providing functionality */
+  // Lists the available Platform Modules and whether each is
+  // currently active and providing functionality
   rpc ListModules (google.protobuf.Empty) returns (ModuleStatusList) {}
-  /* Enables the provided list of Platform Modules and disables those
-     not listed. Use ListModules to see module_id values. */
+  // Enables the provided list of Platform Modules and disables those
+  // not listed. Use ListModules to see module_id values.
   rpc SetActiveModules (ModuleList) returns (google.protobuf.Empty) {}
-  /* Reboots the host immediately */
+  // Reboots the host immediately
   rpc Reboot (google.protobuf.Empty) returns (google.protobuf.Empty) {}
 }
 
 message HostInformation {
+  // Globally unique identifier for the host
   string hostname = 1;
+  // Current time according to host's clock
   google.protobuf.Timestamp time = 2;
-  string timezone = 3;  // e.g. "America/Los_Angeles"
+  // Timezone host is configured to use
+  // e.g. "America/Los_Angeles"
+  string timezone = 3;
 }
 
 message ModuleStatusList {

@@ -24,43 +24,41 @@ service Application {
      To DEPLOY an application, you will need to use Install and
      SwapIdleAndLive at least. */
 
-  /* Shows whether application is running, whether it crashed if it is
-     not running, and the time that it entered its current state. */
+  // Shows whether application is running, whether it crashed if it is
+  // not running, and the time that it entered its current state.
   rpc Status (google.protobuf.Empty) returns (ApplicationStatus) {}
 
-  /* Starts the LIVE application (if it is not already started) */
+  // Starts the LIVE application (if it is not already started)
   rpc Start (google.protobuf.Empty) returns (google.protobuf.Empty) {}
 
-  /* Stops the LIVE application (if it is not already stopped) */
+  // Stops the LIVE application (if it is not already stopped)
   rpc Stop (google.protobuf.Empty) returns (google.protobuf.Empty) {}
 
-  /* Generates a new IDLE version from a given set of Docker tags and
-     credentials, then pulls the necessary Docker images. Status
-     reports are streamed back for each pull. The final message will
-     contain the new docker-compose.yaml just like ViewIdle
-     response. */
+  // Generates a new IDLE version from a given set of Docker tags and
+  // credentials, then pulls the necessary Docker images. Status
+  // reports are streamed back for each pull. The final message will
+  // contain the new docker-compose.yaml just like ViewIdle response.
   rpc Install (ApplicationDefinition) returns (stream InstallStatus) {}
 
-  /* Shows the IDLE version docker-compose.yaml. */
+  // Shows the IDLE version docker-compose.yaml.
   rpc ViewIdle (google.protobuf.Empty) returns (ApplicationSource) {}
 
-  /* Shows the LIVE version docker-compose.yaml. */
+  // Shows the LIVE version docker-compose.yaml.
   rpc ViewLive (google.protobuf.Empty) returns (ApplicationSource) {}
 
-  /* Stops the application (if not already stopped), switches the LIVE
-     and IDLE versions, and then starts the application using the new
-     LIVE version regardless of whether it was running before.
-
-     This is the last step to DEPLOY an application.
-     It is also used to ROLLBACK. */
+  // Stops the application (if not already stopped), switches the LIVE
+  // and IDLE versions, and then starts the application using the new
+  // LIVE version regardless of whether it was running before. This is
+  // the last step to DEPLOY an application. It is also used to
+  // ROLLBACK.
   rpc SwapIdleAndLive (google.protobuf.Empty) returns (google.protobuf.Empty) {}
 
-  /* Erases both the LIVE and IDLE versions and write the default
-     application as both */
+  // Erases both the LIVE and IDLE versions and write the default
+  // application as both
   rpc FactoryReset (google.protobuf.Empty) returns (google.protobuf.Empty) {}
 
-  /* Streams application logs. Multiple lines are batched every second
-     to limit the number of messages streamed. */
+  // Streams application logs. Multiple lines are batched every second
+  // to limit the number of messages streamed.
   rpc Logs (google.protobuf.Empty) returns (stream LogBatch) {}
 }
 
@@ -105,16 +103,17 @@ message ApplicationDefinition {
   DockerAuth default_auth = 2;
 
   message DockerService {
-    string image = 1;  // identifies a Docker image. Format is
-                       // "[REGISTRY_HOST[:REGISTRY_PORT]/]NAME[:TAG]"
-                       // e.g. "index.docker.io/oaklabs/oak:1.0.0:latest"
-    DockerAuth auth = 2;  // credentials to use when pulling this
-                          // image; if not pulling from DockerHub, the
-                          // registry should be specified in 'image'
+    // identifies a Docker image. Format is
+    // "[REGISTRY_HOST[:REGISTRY_PORT]/]NAME[:TAG]"
+    // e.g. "index.docker.io/oaklabs/oak:1.0.0:latest"
+    string image = 1;
+    // credentials to use when pulling this image; if not pulling from
+    // DockerHub, the registry should be specified in 'image'
+    DockerAuth auth = 2;
   }
   message DockerAuth {
     string username = 1;
-    // passwords will NOT be stored by platform server
+    // passwords will NOT be stored by platform server at all
     string password = 2;
   }
 }

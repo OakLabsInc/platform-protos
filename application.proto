@@ -105,7 +105,7 @@ message ApplicationDefinition {
   message DockerService {
     // identifies a Docker image. Format is
     // "[REGISTRY_HOST[:REGISTRY_PORT]/]NAME[:TAG]"
-    // e.g. "index.docker.io/oaklabs/oak:1.0.0:latest"
+    // e.g. "index.docker.io/oaklabs/oak:1.0.0"
     string image = 1;
     // credentials to use when pulling this image; if not pulling from
     // DockerHub, the registry should be specified in 'image'

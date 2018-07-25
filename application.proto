@@ -78,10 +78,11 @@ message InstallStatus {
   string details = 2;
 
   enum InstallStep {
+    // This should never be used
     UNKNOWN_STEP = 0;
     // First message, streamed immediately
     BEGIN = 1;
-    // Final message, details_text will contain docker-compose.yaml
+    // Final message, details will contain docker-compose.yaml
     END = 2;
     // Indicates the next Docker images is about to be pulled, details
     // contains image name

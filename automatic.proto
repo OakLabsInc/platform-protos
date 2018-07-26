@@ -11,14 +11,56 @@ import "touch.proto";
 package oak.platform;
 
 service Automatic {
+  /* Enables configuration when the Platform starts.
+
+     This is used to make settings "permanent", such as ensuring the
+     rotation of a monitor and resetting WiFi connection settings
+     after a reboot.
+
+     When the Platform starts, the Apply RPC is called using the
+     Configuration message that was previously passed to the Store
+     RPC. It is also possible to manually use the Apply RPC at any
+     other time. The automatic configuration is NOT applied every time
+     an application starts. It is only after the Platform is
+     restarted, which is normally only after a reboot.
+
+     Requests in the fields of the stored Configuration message are
+     sent, one at a time, in the order they are shown in the
+     Configuration message definition below, to the appropriate RPCs
+     of the services where those message types are defined.
+
+     Instead of creating the Configuration message by hand, it is
+     recommended that all of the configuration for each other service
+     is prepared at once and then the Generate RPC is used to create a
+     Configuration message that would match the prepared state. Then
+     that message can be passed to the Store RPC. This is essentially
+     a "Save Configuration" flow.
+
+     If there is an error in any of the configuration requests, then
+     the Apply RPC will stop executing at that point. When the cause
+     of the issue is fixed, such as if a missing hardware component
+     was reconnected, then the Apply endpoint can be called again to
+     retry the automatic configuration. */
+
+  // Stores a Configuration for automatic application on start-up
   rpc Store (Configuration) returns (google.protobuf.Empty) {}
+  // Exposes the currently stored Configuration
   rpc View (google.protobuf.Empty) returns (Configuration) {}
+  // Erases the currently stored Configuration so that no automatic
+  // configuration will be done on next Platform startup
   rpc Clear (google.protobuf.Empty) returns (google.protobuf.Empty) {}
+  // Creates a Configuration message that, when sent to the Store RPC,
+  // would lead to automatic configuration resulting in the same
+  // settings that are in place when Generate was called
   rpc Generate (google.protobuf.Empty) returns (Configuration) {}
+  // Uses the stored Configuration message to configure the
+  // appropriate other services
   rpc Apply (google.protobuf.Empty) returns (google.protobuf.Empty) {}
 }
 
 message Configuration {
+  /* The Configuration message contains configuration request messages
+     from other services. See the matching .proto files. */
   repeated oak.platform.AudioConfigurationRequest audio = 1;
   repeated oak.platform.DisplayConfigurationRequest display = 2;
   oak.platform.DisplayGlobalConfiguration display_global = 3;

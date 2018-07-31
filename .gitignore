@@ -2,4 +2,7 @@
 !.gitignore
 !README*
 !*.proto
+!google/
+!google/protobuf
+!google/protobuf/*.proto
 !package.json

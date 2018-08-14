@@ -111,7 +111,7 @@ message ApplicationDefinition {
     string image = 1;
     // Credentials to use when pulling this image
     // passwords will NOT be stored by platform server at all
-    // These cannot be left blank; there are no default credentials
+    // For images served publicly these can be left blank
     string username = 2;
     string password = 3;
   }

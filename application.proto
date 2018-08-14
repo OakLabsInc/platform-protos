@@ -100,22 +100,20 @@ message InstallStatus {
 
 message ApplicationDefinition {
   repeated DockerService services = 1;
-  // credentials to use when they are not specified in an item of 'services'
-  DockerAuth default_auth = 2;
 
   message DockerService {
-    // identifies a Docker image. Format is
+    // Identifies a Docker image. Format is
     // "[REGISTRY_HOST[:REGISTRY_PORT]/]NAME[:TAG]"
     // e.g. "index.docker.io/oaklabs/oak:1.0.0"
+    // If REGISTRY_HOST is not specified, 'index.docker.io'
+    // (Docker Hub) is the default
+    // If TAG is not specified, ':latest' is the default
     string image = 1;
-    // credentials to use when pulling this image; if not pulling from
-    // DockerHub, the registry should be specified in 'image'
-    DockerAuth auth = 2;
-  }
-  message DockerAuth {
-    string username = 1;
+    // Credentials to use when pulling this image
     // passwords will NOT be stored by platform server at all
-    string password = 2;
+    // For images served publicly these can be left blank
+    string username = 2;
+    string password = 3;
   }
 }
 

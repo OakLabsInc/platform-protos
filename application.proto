@@ -28,11 +28,13 @@ service Application {
   // not running, and the time that it entered its current state.
   rpc Status (google.protobuf.Empty) returns (ApplicationStatus) {}
 
-  // Starts the LIVE application (if it is not already started)
-  rpc Start (google.protobuf.Empty) returns (google.protobuf.Empty) {}
+  // Starts the LIVE application if it is not already started
+  // and returns a new ApplicationStatus reflecting the change
+  rpc Start (google.protobuf.Empty) returns (ApplicationStatus) {}
 
-  // Stops the LIVE application (if it is not already stopped)
-  rpc Stop (google.protobuf.Empty) returns (google.protobuf.Empty) {}
+  // Stops the LIVE application if it is not already stopped
+  // and returns a new ApplicationStatus reflecting the change
+  rpc Stop (google.protobuf.Empty) returns (ApplicationStatus) {}
 
   // Generates a new IDLE version from a given set of Docker tags and
   // credentials, then pulls the necessary Docker images. Status

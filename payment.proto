@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package oak.platform;
+
+service Payment {
+  rpc Info (google.protobuf.Empty) returns (PaymentInformation) {}
+  rpc Configure (PaymentConfiguration) returns (google.protobuf.Empty) {}
+  rpc Sale (SaleRequest) returns (SaleResponse) {}
+}
+
+message PaymentInformation {
+  bool configured = 1;
+}
+
+message PaymentConfiguration {
+  repeated PaymentProvider providers = 1;
+}
+
+message PaymentProvider {
+  string name = 1;
+  ProviderType provider = 2;
+  PaymentProviderSolution solution = 3;
+  string host = 4;
+  string api_id = 5;
+  string api_key = 6;
+  enum BatchInterval batch_interval = 7;
+  int32 batch_hour = 8; // 0-23
+
+  enum PaymentProviderType {
+    TEST = 0;
+    FREEDOMPAY = 1;
+  }
+  enum PaymentSolutionType {
+    DEFAULT = 0;
+    POS = 1;
+    CLOUD = 2;
+  }
+  enum BatchInterval {
+    OFF = 0;
+    DAILY = 1;
+    WEEKLY = 2;
+  }
+}
+
+message SaleRequest {
+  string processor = 1; // one of the PaymentProviders provided in configuration
+  StandardSaleRequest request = 2;
+  optional FreedomPayRequest freedompay_request = 3;
+}
+
+message StandardSaleRequest {
+  int32 amount = 1;
+  Currency currency = 2;
+  string transaction_id = 3;
+  string store_id = 4;
+  int32 terminal_id = 5;
+  string merchant_ref = 6;
+  string invoice_number = 7;
+
+  enum Currency {
+    USD = 0;
+  }
+}
+
+message FreedomPayRequest {
+  string client_environment = 1;
+  string lane_id = 2;
+}

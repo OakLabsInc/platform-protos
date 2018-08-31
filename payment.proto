@@ -6,13 +6,14 @@ import "payment_providers/freedompay.proto";
 package oak.platform;
 
 service Payment {
-  rpc Info (google.protobuf.Empty) returns (PaymentInformation) {}
+  rpc Info (google.protobuf.Empty) returns (PaymentServiceInfo) {}
   rpc Configure (PaymentConfiguration) returns (google.protobuf.Empty) {}
   rpc Sale (SaleRequest) returns (SaleResponse) {}
 }
 
-message PaymentInformation {
+message PaymentServiceInfo {
   bool configured = 1;
+  optional PaymentConfiguration configuration = 2;
 }
 
 message PaymentConfiguration {
@@ -31,14 +32,14 @@ enum PaymentSolutionType {
 }
 
 message PaymentProvider {
-  string name = 1;
-  PaymentProviderType provider = 2;
-  PaymentSolutionType solution = 3;
-  string host = 4;
-  string api_id = 5;
-  string api_key = 6;
-  BatchInterval batch_interval = 7;
-  int32 batch_hour = 8; // 0-23
+  string provider_name = 1;
+  PaymentProviderType provider_type = 2;
+  optional PaymentSolutionType solution = 3;
+  optional string host = 4;
+  optional string api_id = 5;
+  optional string api_key = 6;
+  optional BatchInterval batch_interval = 7;
+  optional int32 batch_hour = 8; // 0-23
 
   enum BatchInterval {
     OFF = 0;
@@ -48,25 +49,25 @@ message PaymentProvider {
 }
 
 message SaleRequest {
-  repeated PaymentProviderType provider_type = 1;
-  StandardSaleRequest request = 2;
-  optional FreedomPayRequest freedompay_request = 3;
+  StandardSaleRequest request = 1;
+  optional FreedomPayRequest freedompay_request = 2;
+}
+
+enum Currency {
+  USD = 0;
 }
 
 message StandardSaleRequest {
-  string processor = 1; // one of the PaymentProviders provided in configuration
-  int32 amount = 2;
-  Currency currency = 3;
-  string transaction_id = 4;
-  string store_id = 5;
-  int32 terminal_id = 6;
-  string merchant_ref = 7;
-  string invoice_number = 8;
-
-  enum Currency {
-    USD = 0;
-  }
+  string provider_name = 1; // one of the PaymentProviders provided in configuration
+  int32 amount = 2; // in cents
+  optional Currency currency = 3;
+  optional string transaction_id = 4;
+  optional string store_id = 5;
+  optional int32 terminal_id = 6;
+  optional string merchant_ref = 7;
+  optional string invoice_number = 8;
 }
+
 message SaleResponse {
   PaymentProviderType provider_type = 1;
   StandardSaleResponse response = 2;
@@ -75,11 +76,12 @@ message SaleResponse {
 
 message StandardSaleResponse {
   ResponseStatus status = 1;
-  string error = 2;
-  string transaction_id = 3;
-  int32 sale_amount = 4;
-  string masked_card_number = 5;
-  string name_on_card = 6;
+  optional string error = 2;
+  optional int32 sale_amount = 3;
+  optional Currency currency = 4;
+  optional string masked_card_number = 5;
+  optional string name_on_card = 6;
+  optional string transaction_id = 7;
 
   enum ResponseStatus {
     INTERNAL_ERROR = 0; // something internal failed

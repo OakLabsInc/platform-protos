@@ -8,4 +8,5 @@ message FreedomPayRequest {
 }
 
 message FreedomPayResponse {
+  string request_id = 1;
 }

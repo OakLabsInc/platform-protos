@@ -13,7 +13,7 @@ service Payment {
 
 message PaymentServiceInfo {
   bool configured = 1;
-  optional PaymentConfiguration configuration = 2;
+  PaymentConfiguration configuration = 2;
 }
 
 message PaymentConfiguration {
@@ -34,12 +34,12 @@ enum PaymentSolutionType {
 message PaymentProvider {
   string provider_name = 1;
   PaymentProviderType provider_type = 2;
-  optional PaymentSolutionType solution = 3;
-  optional string host = 4;
-  optional string api_id = 5;
-  optional string api_key = 6;
-  optional BatchInterval batch_interval = 7;
-  optional int32 batch_hour = 8; // 0-23
+  PaymentSolutionType solution = 3;
+  string host = 4;
+  string api_id = 5;
+  string api_key = 6;
+  BatchInterval batch_interval = 7;
+  int32 batch_hour = 8; // 0-23
 
   enum BatchInterval {
     OFF = 0;
@@ -49,8 +49,8 @@ message PaymentProvider {
 }
 
 message SaleRequest {
-  StandardSaleRequest request = 1;
-  optional FreedomPayRequest freedompay_request = 2;
+  StandardSaleRequest sale_request = 1;
+  FreedomPayRequest freedompay_request = 2;
 }
 
 enum Currency {
@@ -60,28 +60,28 @@ enum Currency {
 message StandardSaleRequest {
   string provider_name = 1; // one of the PaymentProviders provided in configuration
   int32 amount = 2; // in cents
-  optional Currency currency = 3;
-  optional string transaction_id = 4;
-  optional string store_id = 5;
-  optional int32 terminal_id = 6;
-  optional string merchant_ref = 7;
-  optional string invoice_number = 8;
+  Currency currency = 3;
+  string transaction_id = 4;
+  string store_id = 5;
+  int32 terminal_id = 6;
+  string merchant_ref = 7;
+  string invoice_number = 8;
 }
 
 message SaleResponse {
   PaymentProviderType provider_type = 1;
   StandardSaleResponse response = 2;
-  optional FreedomPayResponse freedompay_response = 3;
+  FreedomPayResponse freedompay_response = 3;
 }
 
 message StandardSaleResponse {
   ResponseStatus status = 1;
-  optional string error = 2;
-  optional int32 sale_amount = 3;
-  optional Currency currency = 4;
-  optional string masked_card_number = 5;
-  optional string name_on_card = 6;
-  optional string transaction_id = 7;
+  string error = 2;
+  int32 sale_amount = 3;
+  Currency currency = 4;
+  string masked_card_number = 5;
+  string name_on_card = 6;
+  string transaction_id = 7;
 
   enum ResponseStatus {
     INTERNAL_ERROR = 0; // something internal failed

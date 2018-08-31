@@ -5,7 +5,14 @@ import "google/protobuf/empty.proto";
 package oak.platform;
 
 service Touch {
+  /* Configure human touch interfaces including IR and capacitive sensors
+
+     'touch_device_id' values come from serial numbers reported by the
+     touch devices themselves. */
+
+  // Lists touch interfaces that can be configured
   rpc Info (google.protobuf.Empty) returns (TouchInformation) {}
+  // Applies configuration to a touch interface
   rpc Configure (TouchConfigurationRequest) returns (TouchConfiguration) {}
 }
 
@@ -23,6 +30,16 @@ message TouchConfigurationRequest {
 }
 
 message TouchConfiguration {
+  // Four space-separated integers representing
+  // <min-x max-x min-y max-y>
+  // It is recommended that you start with extreme values,
+  // such as "0 32768 0 32768", and then manually change values one
+  // axis at a time until physical touches are aligned as desired
   string calibration = 1;
+  // Whether to swap the X and Y axis
+  // should be True if your touch interface is rotated LEFT or RIGHT
+  // relative to the display is overlays
+  // should be False if it is upright or inverted relative to the
+  // display it overlays
   bool swap_axes = 2;
 }

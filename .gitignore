@@ -5,3 +5,7 @@
 !google/
 !google/protobuf
 !google/protobuf/*
+!google/protobuf/*.proto
+!payment_providers
+!payment_providers/*.proto
+!package.json

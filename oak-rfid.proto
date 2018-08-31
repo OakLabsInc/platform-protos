@@ -5,9 +5,21 @@ import "google/protobuf/empty.proto";
 package oak.platform;
 
 service OakRFID {
+  /* Control an Oak USB RFID Reader.
+
+     The 'oak-rfid' module must be activated before these RPCs are
+     available.
+
+     'rfid_device_id' values come from serial numbers reported by the
+     RFID readers themselves. */
+
+  // Lists controllers that are connected to the host.
   rpc Info (google.protobuf.Empty) returns (OakRFIDInformation) {}
+  // Configures a controller before streaming begins.
   rpc Configure (OakRFIDConfigurationRequest) returns (google.protobuf.Empty) {}
+  // Streams events when RFID tags enter and exit range of the reader
   rpc Stream (OakRFIDStreamRequest) returns (stream OakRFIDEvent) {}
+  // Installs firmware on the controller
   rpc FlashBoard (OakRFIDFlashBoardRequest) returns (google.protobuf.Empty) {}
 }
 
@@ -25,13 +37,17 @@ message OakRFIDStreamRequest {
 
 message OakRFIDEvent {
   Event event = 1;
+  // raw value from the RFID tag
   string epc = 2;
+  // UPC value translated from RFID tag
   string upc = 3;
-  sint32 rssi = 4;  // non-positive
+  // Relative strength of the last tag read. Will be non-positive.
+  // See https://en.wikipedia.org/wiki/Received_signal_strength_indication
+  sint32 rssi = 4;
 
   enum Event {
-    ENTER = 0;
-    EXIT = 1;
+    ENTER = 0;  // indicates an RFID tag is in view
+    EXIT = 1;  // indicates an RFID tag is no longer in view
   }
 }
 
@@ -45,20 +61,38 @@ message OakRFIDConfigurationRequest {
 }
 
 message OakRFIDConfiguration {
+  // Determines how to parse the EPC
   Parser parser = 1;
   SearchMode search_mode = 2;
-  uint32 strength = 3;  // multiple of 25 in [1000,3225]
-  uint32 start_scan_interval = 4;  // ms
-  uint32 max_scan_interval = 5;  // ms
-  uint32 enter_threshold = 6;  // ms
-  uint32 exit_threshold = 7;  // ms
+  // How strong a signal to use when scanning for RFID tags.
+  // Must be a multiple of 25 between 1000 and 3225 inclusive.
+  uint32 strength = 3;
+  /* The reader scans for tags in an interval. The interval starts at
+     'start_scan_interval' and is doubled after every scan until it
+     passes 'max_scan_interval' and then that is used as the interval.
+
+     Tags are considered to have ENTERed view after they are detected
+     by every scan within a period lasting for the asdf
+     'enter_threshold'. Once they are considered in view, they EXIT
+     view after they are NOT detected by every scan within a period
+     lasting for the 'exit_threshold'.
+
+     All of these times are specified in milliseconds. */
+  uint32 start_scan_interval = 4;
+  uint32 max_scan_interval = 5;
+  uint32 enter_threshold = 6;
+  uint32 exit_threshold = 7;
 
   enum Parser {
+    // Do not parse EPC, pass through unaltered
     RAW = 0;
+    // Parse the EPC as a UPC
     UPC = 1;
+    // For cases where EPCs are encoded as UPCs with 14 digits
     UPC14 = 2;
   }
   enum SearchMode {
+    // When in doubt, use READER_SELECTED
     READER_SELECTED = 0;
     DUAL_TARGET = 1;
     SINGLE_TARGET = 2;

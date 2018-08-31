@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package oak.platform;
+
+message FreedomPayRequest {
+  string client_environment = 1;
+  string lane_id = 2;
+}
+
+message FreedomPayResponse {
+  string request_id = 1;
+}

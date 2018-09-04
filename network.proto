@@ -5,11 +5,11 @@ import "google/protobuf/empty.proto";
 package oak.platform;
 
 service Network {
-  /* View and configure host's networking settings.
+  // View and configure host's networking settings.
 
-     Currently, only WPA-PSK WiFi networks are supported. Wired
-     network connections cannot be altered and should be configured
-     via DHCP. */
+  // Currently, only WPA-PSK WiFi networks are supported. Wired
+  // network connections cannot be altered and should be configured
+  // via DHCP.
 
   // Shows network information for all Ethernet and WiFi devices,
   // including current network addresses and MAC addresses.
@@ -17,12 +17,16 @@ service Network {
 
   // Lists visible WiFi networks using the first available WiFi interface
   rpc WiFiScan (google.protobuf.Empty) returns (WiFiScanResults) {}
+
   // Adds or overwrites configuration for connecting to a specific
   // WiFi network. The host will then attempt to connect to the
-  // network whenever it is available.
+  // network whenever it is available. These settings are persisted
+  // until `ForgetWifi` is used.
   rpc AddWiFi (WiFiConnectionSettings) returns (google.protobuf.Empty) {}
+
   // Removes stored WiFi configuration.
   rpc ForgetWiFi (WiFiConnectionSettings) returns (google.protobuf.Empty) {}
+
   // Lists the WiFi network configurations that are available to this host.
   rpc ListKnownWiFiNetworks (google.protobuf.Empty) returns (WiFiNetworkList) {}
 }
@@ -57,11 +61,12 @@ message WiFiScanResults {
 }
 
 message WiFiConnectionSettings {
+
   // Settings are WPA-PSK, also known as WPA-Personal.
   // This is currently all that is supported.
   string ssid = 1;
-  // 'passphrase' will be stored securely and CANNOT be retrieved via
-  // this service.
+
+  // 'passphrase' will be stored securely and CANNOT be viewed.
   string passphrase = 2;
 }
 

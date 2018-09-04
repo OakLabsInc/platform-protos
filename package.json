@@ -1,0 +1,19 @@
+{
+  "name": "@oaklabs/platform-protos",
+  "version": "2.1.3",
+  "description": "OakOS Platform Protocol Buffers",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OakLabsInc/platform-protos.git"
+  },
+  "keywords": [
+    "OakOS",
+    "gRPC",
+    "kiosk"
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/OakLabsInc/platform-protos/issues"
+  },
+  "homepage": "https://github.com/OakLabsInc/platform-protos#readme"
+}

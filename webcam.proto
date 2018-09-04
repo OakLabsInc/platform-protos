@@ -22,7 +22,7 @@ service Webcam {
 
   // A webcam can only have one stream at a time and a port can only
   // be used for one stream at a time.
-  rpc StartStream (StreamRequest) returns (Stream) {}
+  rpc StartStream (StreamRequest) returns (JpgStream) {}
   // Stops a previously started stream from a specified camera
   rpc StopStream (StreamRequest) returns (google.protobuf.Empty) {}
 }
@@ -46,7 +46,7 @@ message StreamRequest {
   string port = 3;
 }
 
-message Stream {
+message JpgStream {
   // The local URL where a stream can be reached.
   string url = 1;
 }

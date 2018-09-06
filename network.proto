@@ -92,8 +92,13 @@ message NetworkManagerConfiguration {
   // networks. Each file is an .ini format file that describes a
   // network connection profile.
   // See: https://developer.gnome.org/NetworkManager/stable/nm-settings-keyfile.html
+
   // Typically, there would be one file for each network the unit
-  // needs to be able to join.
+  // needs to be able to join. These files are normally generated via
+  // nm-connection-editor. The recommended work-flow is to set up and
+  // test a connection locally and then copy the generated file
+  // removing any unnecessary or conflicting fields such as those that
+  // contain hardware addresses. Note that '[main]/uuid' is required.
   repeated string connection_file = 1;
 
   // Certificate files and other assets that a connection_file might

@@ -29,6 +29,18 @@ service Network {
 
   // Lists the WiFi network configurations that are available to this host.
   rpc ListKnownWiFiNetworks (google.protobuf.Empty) returns (WiFiNetworkList) {}
+
+  // Erases any previously configured network settings and drops in
+  // provided NetworkManager connections. This supports all types of
+  // connection configuration that NetworkManager supports. The
+  // automatic connection for Ethernet ports will still be present
+  // unless overridden in a provided connection file. Because the
+  // configurations may contain passwords they CANNOT be viewed later.
+  // CAUTION! If wired connections are configured through this RPC
+  // then the automatic DHCP connection may be lost. If all
+  // connections become invalid or unusable, the only route of
+  // recovery may be to re-install the OS.
+  rpc FullyConfigureNetworkManager (NetworkManagerConfiguration) returns (google.protobuf.Empty) {}
 }
 
 message NetworkInformation {
@@ -72,4 +84,30 @@ message WiFiConnectionSettings {
 
 message WiFiNetworkList {
   repeated WiFiConnectionSettings wifi_networks = 2;
+}
+
+message NetworkManagerConfiguration {
+
+  // A set of NetworkManager "keyfiles" describing how to connect to
+  // networks. Each file is an .ini format file that describes a
+  // network connection profile.
+  // See: https://developer.gnome.org/NetworkManager/stable/nm-settings-keyfile.html
+
+  // Typically, there would be one file for each network the unit
+  // needs to be able to join. These files are normally generated via
+  // nm-connection-editor. The recommended work-flow is to set up and
+  // test a connection locally and then copy the generated file
+  // removing any unnecessary or conflicting fields such as those that
+  // contain hardware addresses. Note that '[main]/uuid' is required.
+  repeated string connection_file = 1;
+
+  // Certificate files and other assets that a connection_file might
+  // reference. If a connection profile needs to reference a
+  // certificate, the certificate file can be provided in the
+  // 'asset_file' array and then it will be placed at
+  // '/network-asset/$N' where $N is the 0-based index in
+  // 'asset_file'. For example, if two asset files are provided then
+  // in a connection_file they can be referenced as '/network-asset/0'
+  // and '/network-asset/1'.
+  repeated string asset_file = 2;
 }

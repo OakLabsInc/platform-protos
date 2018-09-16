@@ -5,34 +5,25 @@ import "google/protobuf/timestamp.proto";
 
 package oak.platform;
 
+// Expose information and control specific to the host and not related
+// to any specific hardware
 service Host {
-  /* Exposes information and control specific to the host and not
-  related to any specific hardware.
-
-  Also enables control of Platform Modules, which can add more
-  functionality to the platform when desired. Modules are not enabled
-  by default to preserve system resources.
-
-  If an attempt is made to use an rpc provided by a module that is not
-  active it may return an 502 error. */
 
   // Exposes hostname, current time and timezone of host
   rpc Info (google.protobuf.Empty) returns (HostInformation) {}
-  // Lists the available Platform Modules and whether each is
-  // currently active and providing functionality
-  rpc ListModules (google.protobuf.Empty) returns (ModuleStatusList) {}
-  // Enables the provided list of Platform Modules and disables those
-  // not listed. Use ListModules to see module_id values.
-  rpc SetActiveModules (ModuleList) returns (google.protobuf.Empty) {}
+
   // Reboots the host immediately
   rpc Reboot (google.protobuf.Empty) returns (google.protobuf.Empty) {}
 }
 
 message HostInformation {
+
   // Globally unique identifier for the host
   string hostname = 1;
+
   // Current time according to host's clock
   google.protobuf.Timestamp time = 2;
+
   // Timezone host is configured to use
   // e.g. "America/Los_Angeles"
   string timezone = 3;

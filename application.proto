@@ -102,6 +102,7 @@ message ApplicationDefinition {
   repeated DockerService services = 1;
 
   message DockerService {
+
     // Identifies a Docker image. Format is
     // "[REGISTRY_HOST[:REGISTRY_PORT]/]NAME[:TAG]"
     // e.g. "index.docker.io/oaklabs/oak:1.0.0"
@@ -109,11 +110,31 @@ message ApplicationDefinition {
     // (Docker Hub) is the default
     // If TAG is not specified, ':latest' is the default
     string image = 1;
-    // Credentials to use when pulling this image
-    // passwords will NOT be stored by platform server at all
-    // For images served publicly these can be left blank
+
+    // Username to use when pulling this image
+    // For images served publicly this can be left blank
     string username = 2;
+
+    // Password for the specified username
+    // Passwords will NOT be stored by platform server at all; they
+    // are used at Install time and then forgotten
     string password = 3;
+
+    // Environment variables to be set for just this Docker container
+    // These will be visible
+    map<string, string> environment = 4;
+
+    // An archive of files that will be mounted read-only at
+    // /read-only-assets/ in the Docker container
+    // This can be used to store sensitive files that the application
+    // needs such as SSL certificates or passwords. The archive itself
+    // is NOT retrievable and the files will only be visible to the
+    // specific service. If multiple services need the same file then
+    // that file must be provided to each service separately.
+    // This can be a .tar, .tar.gz, or .zip file. There is no
+    // specifically enforced size limit, but it is not recommended for
+    // more than a few kilobytes.
+    bytes assets_archive = 5;
   }
 }
 

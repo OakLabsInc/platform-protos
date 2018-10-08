@@ -36,6 +36,8 @@ message HostInformation {
   // Timezone host is configured to use
   // e.g. "America/Los_Angeles"
   string timezone = 3;
+  string oakos_version = 4;
+  string platform_version = 5;
 }
 
 message ModuleStatusList {

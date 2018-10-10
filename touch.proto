@@ -42,15 +42,38 @@ message TouchConfiguration {
   // axis at a time until physical touches are aligned as desired.
   string calibration = 1;
 
-  bool OBSOLETE_swap_axes = 2;
+  // Direction the plane of touch is oriented relative to the touch
+  // interface's upright orientation. This is configured independently
+  // of any display's orientation.
+  // FORWARD_*  means facing the user as a monitor does
+  // BACKWARD_* means turned around (the X axis is reversed) *before* rotating
+  // LEFT and RIGHT mean quarter turns relative to user's perspective
+  Orientation orientation = 2;
 
-  // Rotate the interface relative to its physical upright direction
-  // NOT relative to the current rotation or a display's image
-  Rotate rotate = 3;
-  enum Rotate {
-    NO_ROTATE = 0;
-    LEFT = 1;  // turn 90 degrees counter-clockwise
-    RIGHT = 2;  // turn 90 degrees clockwise
-    INVERTED = 3;  // turn 180 degrees
+  enum Orientation {
+
+    // facing user, right-side up
+    FORWARD_UPRIGHT = 0;
+
+    // facing user, quarter turn counter-clockwise
+    FORWARD_LEFT = 1;
+
+    // facing user, quarter turn clockwise
+    FORWARD_RIGHT = 2;
+
+    // facing user, upside down
+    FORWARD_INVERTED = 3;
+
+    // facing away from user, right-side up
+    BACKWARD_UPRIGHT = 4;
+
+    // facing away from user, quarter turn counter-clockwise
+    BACKWARD_LEFT = 5;
+
+    // facing away from user, quarter turn clockwise
+    BACKWARD_RIGHT = 6;
+
+    // facing away from user, upside down
+    BACKWARD_INVERTED = 7;
   }
 }

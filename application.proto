@@ -6,23 +6,23 @@ import "google/protobuf/timestamp.proto";
 package oak.platform;
 
 service Application {
-  /* Manage the user's application. Application are defined by
-     docker-compose.yaml files.
-
-     The host will hold two application versions called LIVE and
-     IDLE. Both are docker-compose.yaml files.
-
-     The LIVE version is the version that is actually run.
-
-     The IDLE version is a placeholder where new applications can be
-     installed.
-
-     When a new version is installed as the IDLE version, it can then
-     be deployed by swapping the LIVE and IDLE versions. They can then
-     be swapped again to roll back if necessary.
-
-     To DEPLOY an application, you will need to use Install and
-     SwapIdleAndLive at least. */
+  // Manage the user's application. Application are defined by
+  // docker-compose.yaml files.
+  //
+  // The host will hold two application versions called LIVE and
+  // IDLE. Both are docker-compose.yaml files.
+  //
+  // The LIVE version is the version that is actually run.
+  //
+  // The IDLE version is a placeholder where new applications can be
+  // installed.
+  //
+  // When a new version is installed as the IDLE version, it can then
+  // be deployed by swapping the LIVE and IDLE versions. They can then
+  // be swapped again to roll back if necessary.
+  //
+  // To DEPLOY an application, you will need to use Install and
+  // SwapIdleAndLive at least.
 
   // Shows whether application is running, whether it crashed if it is
   // not running, and the time that it entered its current state.
@@ -38,6 +38,13 @@ service Application {
   // credentials, then pulls the necessary Docker images. Status
   // reports are streamed back for each pull. The final message will
   // contain the new docker-compose.yaml just like ViewIdle response.
+  //
+  // If any devices matching the globs below are present when an app
+  // is installed then they must be present when the app is started:
+  // /dev/video*
+  // /dev/ttyACM*
+  // /dev/nvidia0
+  // /dev/nvidiactl
   rpc Install (ApplicationDefinition) returns (stream InstallStatus) {}
 
   // Shows the IDLE version docker-compose.yaml.
@@ -63,36 +70,48 @@ service Application {
 }
 
 message ApplicationStatus {
+
   // Whether the application is currently running
   bool running = 1;
+
   // If the application is stopped, whether it crashed or was
   // deliberately stopped
   bool failed = 2;
+
   // Timestamp according to the unit's clock when the application
   // status last changed
   google.protobuf.Timestamp since = 3;
 }
 
 message InstallStatus {
+
   InstallStep step = 1;
   string details = 2;
 
   enum InstallStep {
+
     // This should never be used
     UNKNOWN_STEP = 0;
+
     // First message, streamed immediately
     BEGIN = 1;
+
     // Final message, details will contain docker-compose.yaml
     END = 2;
+
     // Indicates the next Docker images is about to be pulled, details
     // contains image name
     PULL_BEGIN = 3;
+
     // Details about image currently being pulled, details will be JSON
     PULLING = 7;
+
     // Indicates Docker image pull is complete
     PULL_END = 4;
+
     // Indicates new docker-compose.yaml is about to be generated and written
     WRITE_BEGIN = 5;
+
     // Indicates writing docker-compose.yaml was successful
     WRITE_END = 6;
   }
@@ -102,6 +121,7 @@ message ApplicationDefinition {
   repeated DockerService services = 1;
 
   message DockerService {
+
     // Identifies a Docker image. Format is
     // "[REGISTRY_HOST[:REGISTRY_PORT]/]NAME[:TAG]"
     // e.g. "index.docker.io/oaklabs/oak:1.0.0"
@@ -109,11 +129,22 @@ message ApplicationDefinition {
     // (Docker Hub) is the default
     // If TAG is not specified, ':latest' is the default
     string image = 1;
-    // Credentials to use when pulling this image
-    // passwords will NOT be stored by platform server at all
-    // For images served publicly these can be left blank
+
+    // Username to use when pulling this image
+    // For images served publicly this can be left blank
     string username = 2;
+
+    // Password for the specified username
+    // Passwords will NOT be stored by platform server at all; they
+    // are used at Install time and then forgotten
     string password = 3;
+
+    // Environment variables to be set for just this Docker container
+    // Each string must take this form: KEY=value
+    // 'KEY' must contain only upper-case letters, digits and '_' and
+    // not start with a digit
+    // 'value' can be any single-line string, quotes are not necessary
+    map<string,string> environment = 4;
   }
 }
 

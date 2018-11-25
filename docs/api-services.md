@@ -77,74 +77,16 @@
     - [Network](#oak.platform.Network)
   
 
-- [oak-lights.proto](#oak-lights.proto)
-    - [ChangeColorRequest](#oak.platform.ChangeColorRequest)
-    - [ChangeColorRequest.Color](#oak.platform.ChangeColorRequest.Color)
-    - [ControllerID](#oak.platform.ControllerID)
-    - [OakLightsInformation](#oak.platform.OakLightsInformation)
-    - [OakLightsInformation.OakLights](#oak.platform.OakLightsInformation.OakLights)
-  
-  
-  
-    - [OakLights](#oak.platform.OakLights)
-  
-
-- [oak-rfid.proto](#oak-rfid.proto)
-    - [OakRFIDConfiguration](#oak.platform.OakRFIDConfiguration)
-    - [OakRFIDConfigurationRequest](#oak.platform.OakRFIDConfigurationRequest)
-    - [OakRFIDEvent](#oak.platform.OakRFIDEvent)
-    - [OakRFIDFlashBoardRequest](#oak.platform.OakRFIDFlashBoardRequest)
-    - [OakRFIDInformation](#oak.platform.OakRFIDInformation)
-    - [OakRFIDInformation.OakRFIDDevice](#oak.platform.OakRFIDInformation.OakRFIDDevice)
-    - [OakRFIDStreamRequest](#oak.platform.OakRFIDStreamRequest)
-  
-    - [OakRFIDConfiguration.Parser](#oak.platform.OakRFIDConfiguration.Parser)
-    - [OakRFIDConfiguration.SearchMode](#oak.platform.OakRFIDConfiguration.SearchMode)
-    - [OakRFIDEvent.Event](#oak.platform.OakRFIDEvent.Event)
-  
-  
-    - [OakRFID](#oak.platform.OakRFID)
-  
-
-- [payment.proto](#payment.proto)
-    - [PaymentConfiguration](#oak.platform.PaymentConfiguration)
-    - [PaymentProvider](#oak.platform.PaymentProvider)
-    - [PaymentServiceInfo](#oak.platform.PaymentServiceInfo)
-    - [SaleRequest](#oak.platform.SaleRequest)
-    - [SaleResponse](#oak.platform.SaleResponse)
-    - [StandardSaleRequest](#oak.platform.StandardSaleRequest)
-    - [StandardSaleResponse](#oak.platform.StandardSaleResponse)
-  
-    - [Currency](#oak.platform.Currency)
-    - [PaymentProvider.BatchInterval](#oak.platform.PaymentProvider.BatchInterval)
-    - [PaymentProviderType](#oak.platform.PaymentProviderType)
-    - [PaymentSolutionType](#oak.platform.PaymentSolutionType)
-    - [StandardSaleResponse.ResponseStatus](#oak.platform.StandardSaleResponse.ResponseStatus)
-  
-  
-    - [Payment](#oak.platform.Payment)
-  
-
 - [touch.proto](#touch.proto)
     - [TouchConfiguration](#oak.platform.TouchConfiguration)
     - [TouchConfigurationRequest](#oak.platform.TouchConfigurationRequest)
     - [TouchInformation](#oak.platform.TouchInformation)
     - [TouchInformation.TouchDevice](#oak.platform.TouchInformation.TouchDevice)
   
+    - [TouchConfiguration.Orientation](#oak.platform.TouchConfiguration.Orientation)
   
   
     - [Touch](#oak.platform.Touch)
-  
-
-- [webcam.proto](#webcam.proto)
-    - [JpgStream](#oak.platform.JpgStream)
-    - [StreamRequest](#oak.platform.StreamRequest)
-    - [WebcamInformation](#oak.platform.WebcamInformation)
-    - [WebcamInformation.Webcam](#oak.platform.WebcamInformation.Webcam)
-  
-  
-  
-    - [Webcam](#oak.platform.Webcam)
   
 
 - [Scalar Value Types](#scalar-value-types)
@@ -182,8 +124,10 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | image | [string](#string) |  | Identifies a Docker image. Format is &#34;[REGISTRY_HOST[:REGISTRY_PORT]/]NAME[:TAG]&#34; e.g. &#34;index.docker.io/oaklabs/oak:1.0.0&#34; If REGISTRY_HOST is not specified, &#39;index.docker.io&#39; (Docker Hub) is the default If TAG is not specified, &#39;:latest&#39; is the default |
-| username | [string](#string) |  | Credentials to use when pulling this image passwords will NOT be stored by platform server at all For images served publicly these can be left blank |
-| password | [string](#string) |  |  |
+| username | [string](#string) |  | Username to use when pulling this image For images served publicly this can be left blank |
+| password | [string](#string) |  | Password for the specified username Passwords will NOT be stored by platform server at all; they are used at Install time and then forgotten |
+| environment | [ApplicationDefinition.DockerService.EnvironmentEntry](#oak.platform.ApplicationDefinition.DockerService.EnvironmentEntry) | repeated | Environment variables to be set for just this Docker container The key and values in this mapping will be the name and value of the environment variables. The key must contain only upper-case letters, digits and &#39;_&#39; and not start with a digit &#39;value&#39; can be any single-line string, quotes are not necessary |
+| assets | [ApplicationDefinition.DockerService.AssetsEntry](#oak.platform.ApplicationDefinition.DockerService.AssetsEntry) | repeated | Files to be mounted read-only in this Docker container This is intended for configuration and credential files The key must be an absolute path where the file should be mounted at and the value is the contents of the file. |
 
 
 
@@ -319,7 +263,9 @@ SwapIdleAndLive at least.
 | Status | [.google.protobuf.Empty](#google.protobuf.Empty) | [ApplicationStatus](#google.protobuf.Empty) | Shows whether application is running, whether it crashed if it is not running, and the time that it entered its current state. |
 | Start | [.google.protobuf.Empty](#google.protobuf.Empty) | [.google.protobuf.Empty](#google.protobuf.Empty) | Starts the LIVE application (if it is not already started) |
 | Stop | [.google.protobuf.Empty](#google.protobuf.Empty) | [.google.protobuf.Empty](#google.protobuf.Empty) | Stops the LIVE application (if it is not already stopped) |
-| Install | [ApplicationDefinition](#oak.platform.ApplicationDefinition) | [InstallStatus](#oak.platform.ApplicationDefinition) | Generates a new IDLE version from a given set of Docker tags and credentials, then pulls the necessary Docker images. Status reports are streamed back for each pull. The final message will contain the new docker-compose.yaml just like ViewIdle response. |
+| Install | [ApplicationDefinition](#oak.platform.ApplicationDefinition) | [InstallStatus](#oak.platform.ApplicationDefinition) | Generates a new IDLE version from a given set of Docker tags and credentials, then pulls the necessary Docker images. Status reports are streamed back for each pull. The final message will contain the new docker-compose.yaml just like ViewIdle response.
+
+If any devices matching the globs below are present when an app is installed then they must be present when the app is started: /dev/video* /dev/ttyACM* /dev/nvidia0 /dev/nvidiactl |
 | ViewIdle | [.google.protobuf.Empty](#google.protobuf.Empty) | [ApplicationSource](#google.protobuf.Empty) | Shows the IDLE version docker-compose.yaml. |
 | ViewLive | [.google.protobuf.Empty](#google.protobuf.Empty) | [ApplicationSource](#google.protobuf.Empty) | Shows the LIVE version docker-compose.yaml. |
 | SwapIdleAndLive | [.google.protobuf.Empty](#google.protobuf.Empty) | [.google.protobuf.Empty](#google.protobuf.Empty) | Stops the application (if not already stopped), switches the LIVE and IDLE versions, and then starts the application using the new LIVE version regardless of whether it was running before. This is the last step to DEPLOY an application. It is also used to ROLLBACK. |
@@ -647,6 +593,8 @@ display is plugged into.
 | hostname | [string](#string) |  | Globally unique identifier for the host |
 | time | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  | Current time according to host&#39;s clock |
 | timezone | [string](#string) |  | Timezone host is configured to use e.g. &#34;America/Los_Angeles&#34; |
+| oakos_version | [string](#string) |  |  |
+| platform_version | [string](#string) |  |  |
 
 
 
@@ -708,21 +656,12 @@ display is plugged into.
 <a name="oak.platform.Host"/>
 
 ### Host
-Exposes information and control specific to the host and not
-related to any specific hardware.
-
-Also enables control of Platform Modules, which can add more
-functionality to the platform when desired. Modules are not enabled
-by default to preserve system resources.
-
-If an attempt is made to use an rpc provided by a module that is not
-active it may return an 502 error.
+Expose information and control specific to the host and not related
+to any specific hardware
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
 | Info | [.google.protobuf.Empty](#google.protobuf.Empty) | [HostInformation](#google.protobuf.Empty) | Exposes hostname, current time and timezone of host |
-| ListModules | [.google.protobuf.Empty](#google.protobuf.Empty) | [ModuleStatusList](#google.protobuf.Empty) | Lists the available Platform Modules and whether each is currently active and providing functionality |
-| SetActiveModules | [ModuleList](#oak.platform.ModuleList) | [.google.protobuf.Empty](#oak.platform.ModuleList) | Enables the provided list of Platform Modules and disables those not listed. Use ListModules to see module_id values. |
 | Reboot | [.google.protobuf.Empty](#google.protobuf.Empty) | [.google.protobuf.Empty](#google.protobuf.Empty) | Reboots the host immediately |
 
  
@@ -887,540 +826,6 @@ View and configure host&#39;s networking settings.
 
 
 
-<a name="oak-lights.proto"/>
-<p align="right"><a href="#top">Top</a></p>
-
-## oak-lights.proto
-
-
-
-<a name="oak.platform.ChangeColorRequest"/>
-
-### ChangeColorRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| controller_id | [string](#string) |  |  |
-| rgb | [ChangeColorRequest.Color](#oak.platform.ChangeColorRequest.Color) |  |  |
-| hex | [string](#string) |  | 3 or 6 digits with leading &#39;#&#39;, e.g. &#34;#F00&#34;, &#39;#A05020&#34; &#34;#FFFF00&#34; is invalid because 0 is not acceptable. |
-| white | [uint32](#uint32) |  | The brightness of the white lights at end of transition. Must be between 1 and 255 inclusive. |
-| duration | [uint32](#uint32) |  | The time in milliseconds for the transition to take. Must be positive. For fastest transition possible, use 1. |
-
-
-
-
-
-
-<a name="oak.platform.ChangeColorRequest.Color"/>
-
-### ChangeColorRequest.Color
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| r | [uint32](#uint32) |  | Each value must be between 1 and 255 inclusive. |
-| g | [uint32](#uint32) |  |  |
-| b | [uint32](#uint32) |  |  |
-
-
-
-
-
-
-<a name="oak.platform.ControllerID"/>
-
-### ControllerID
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| controller_id | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="oak.platform.OakLightsInformation"/>
-
-### OakLightsInformation
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| controllers | [OakLightsInformation.OakLights](#oak.platform.OakLightsInformation.OakLights) | repeated |  |
-
-
-
-
-
-
-<a name="oak.platform.OakLightsInformation.OakLights"/>
-
-### OakLightsInformation.OakLights
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| controller_id | [string](#string) |  |  |
-
-
-
-
-
- 
-
- 
-
- 
-
-
-<a name="oak.platform.OakLights"/>
-
-### OakLights
-Control an Oak USB Lighting Controller.
-
-The &#39;oak-lights&#39; module must be activated before these RPCs are
-available.
-
-&#39;controller_id&#39; values come from serial numbers reported by the
-light controllers themselves.
-
-| Method Name | Request Type | Response Type | Description |
-| ----------- | ------------ | ------------- | ------------|
-| Info | [.google.protobuf.Empty](#google.protobuf.Empty) | [OakLightsInformation](#google.protobuf.Empty) | Lists controllers that are connected to the host |
-| ChangeColor | [ChangeColorRequest](#oak.platform.ChangeColorRequest) | [.google.protobuf.Empty](#oak.platform.ChangeColorRequest) | Transitions the light color over a given amount of time |
-| FlashBoard | [ControllerID](#oak.platform.ControllerID) | [.google.protobuf.Empty](#oak.platform.ControllerID) | Installs firmware on the controller |
-
- 
-
-
-
-<a name="oak-rfid.proto"/>
-<p align="right"><a href="#top">Top</a></p>
-
-## oak-rfid.proto
-
-
-
-<a name="oak.platform.OakRFIDConfiguration"/>
-
-### OakRFIDConfiguration
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| parser | [OakRFIDConfiguration.Parser](#oak.platform.OakRFIDConfiguration.Parser) |  | Determines how to parse the EPC |
-| search_mode | [OakRFIDConfiguration.SearchMode](#oak.platform.OakRFIDConfiguration.SearchMode) |  |  |
-| strength | [uint32](#uint32) |  | How strong a signal to use when scanning for RFID tags. Must be a multiple of 25 between 1000 and 3225 inclusive. |
-| start_scan_interval | [uint32](#uint32) |  | The reader scans for tags in an interval. The interval starts at &#39;start_scan_interval&#39; and is doubled after every scan until it passes &#39;max_scan_interval&#39; and then that is used as the interval.
-
-Tags are considered to have ENTERed view after they are detected by every scan within a period lasting for the asdf &#39;enter_threshold&#39;. Once they are considered in view, they EXIT view after they are NOT detected by every scan within a period lasting for the &#39;exit_threshold&#39;.
-
-All of these times are specified in milliseconds. |
-| max_scan_interval | [uint32](#uint32) |  |  |
-| enter_threshold | [uint32](#uint32) |  |  |
-| exit_threshold | [uint32](#uint32) |  |  |
-
-
-
-
-
-
-<a name="oak.platform.OakRFIDConfigurationRequest"/>
-
-### OakRFIDConfigurationRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| rfid_device_id | [string](#string) |  |  |
-| configuration | [OakRFIDConfiguration](#oak.platform.OakRFIDConfiguration) |  |  |
-
-
-
-
-
-
-<a name="oak.platform.OakRFIDEvent"/>
-
-### OakRFIDEvent
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| event | [OakRFIDEvent.Event](#oak.platform.OakRFIDEvent.Event) |  |  |
-| epc | [string](#string) |  | raw value from the RFID tag |
-| upc | [string](#string) |  | UPC value translated from RFID tag |
-| rssi | [sint32](#sint32) |  | Relative strength of the last tag read. Will be non-positive. See https://en.wikipedia.org/wiki/Received_signal_strength_indication |
-
-
-
-
-
-
-<a name="oak.platform.OakRFIDFlashBoardRequest"/>
-
-### OakRFIDFlashBoardRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| rfid_device_id | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="oak.platform.OakRFIDInformation"/>
-
-### OakRFIDInformation
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| rfid_devices | [OakRFIDInformation.OakRFIDDevice](#oak.platform.OakRFIDInformation.OakRFIDDevice) | repeated |  |
-
-
-
-
-
-
-<a name="oak.platform.OakRFIDInformation.OakRFIDDevice"/>
-
-### OakRFIDInformation.OakRFIDDevice
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| rfid_device_id | [string](#string) |  |  |
-| configuration | [OakRFIDConfiguration](#oak.platform.OakRFIDConfiguration) |  |  |
-
-
-
-
-
-
-<a name="oak.platform.OakRFIDStreamRequest"/>
-
-### OakRFIDStreamRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| rfid_device_id | [string](#string) |  |  |
-
-
-
-
-
- 
-
-
-<a name="oak.platform.OakRFIDConfiguration.Parser"/>
-
-### OakRFIDConfiguration.Parser
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| RAW | 0 | Do not parse EPC, pass through unaltered |
-| UPC | 1 | Parse the EPC as a UPC |
-| UPC14 | 2 | For cases where EPCs are encoded as UPCs with 14 digits |
-
-
-
-<a name="oak.platform.OakRFIDConfiguration.SearchMode"/>
-
-### OakRFIDConfiguration.SearchMode
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| READER_SELECTED | 0 | When in doubt, use READER_SELECTED |
-| DUAL_TARGET | 1 |  |
-| SINGLE_TARGET | 2 |  |
-| SINGLE_TARGET_WITH_SUPPRESSION | 3 |  |
-
-
-
-<a name="oak.platform.OakRFIDEvent.Event"/>
-
-### OakRFIDEvent.Event
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| ENTER | 0 | indicates an RFID tag is in view |
-| EXIT | 1 | indicates an RFID tag is no longer in view |
-
-
- 
-
- 
-
-
-<a name="oak.platform.OakRFID"/>
-
-### OakRFID
-Control an Oak USB RFID Reader.
-
-The &#39;oak-rfid&#39; module must be activated before these RPCs are
-available.
-
-&#39;rfid_device_id&#39; values come from serial numbers reported by the
-RFID readers themselves.
-
-| Method Name | Request Type | Response Type | Description |
-| ----------- | ------------ | ------------- | ------------|
-| Info | [.google.protobuf.Empty](#google.protobuf.Empty) | [OakRFIDInformation](#google.protobuf.Empty) | Lists controllers that are connected to the host. |
-| Configure | [OakRFIDConfigurationRequest](#oak.platform.OakRFIDConfigurationRequest) | [.google.protobuf.Empty](#oak.platform.OakRFIDConfigurationRequest) | Configures a controller before streaming begins. |
-| Stream | [OakRFIDStreamRequest](#oak.platform.OakRFIDStreamRequest) | [OakRFIDEvent](#oak.platform.OakRFIDStreamRequest) | Streams events when RFID tags enter and exit range of the reader |
-| FlashBoard | [OakRFIDFlashBoardRequest](#oak.platform.OakRFIDFlashBoardRequest) | [.google.protobuf.Empty](#oak.platform.OakRFIDFlashBoardRequest) | Installs firmware on the controller |
-
- 
-
-
-
-<a name="payment.proto"/>
-<p align="right"><a href="#top">Top</a></p>
-
-## payment.proto
-
-
-
-<a name="oak.platform.PaymentConfiguration"/>
-
-### PaymentConfiguration
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| providers | [PaymentProvider](#oak.platform.PaymentProvider) | repeated |  |
-
-
-
-
-
-
-<a name="oak.platform.PaymentProvider"/>
-
-### PaymentProvider
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| provider_name | [string](#string) |  | During configuration the provider name can be set to any value. Afterwards it will be referred to by this name when issuing a transaction. This allows multiple payment providers to be saved and selected between. |
-| provider_type | [PaymentProviderType](#oak.platform.PaymentProviderType) |  | This selects the payment company that will facilitate transactions. |
-| solution | [PaymentSolutionType](#oak.platform.PaymentSolutionType) |  | This selects the specific software product that will facilitate transactions. |
-| host | [string](#string) |  | (Optional) This configures the API host that we will communicate with for this provider. It may be a local network address (for POS solutions) or a WAN address (for cloud). |
-| api_id | [string](#string) |  | (Optional) Some solutions, particularly cloud, will require an api_id. Check the documentation for your specific provider/solution. |
-| api_key | [string](#string) |  | (Optional) Some solutions, particularly cloud, will require an api_key. Check the documentation for your specific provider/solution. |
-| batch_interval | [PaymentProvider.BatchInterval](#oak.platform.PaymentProvider.BatchInterval) |  | (Optional) This sets the batch interval for POS solutions. This is offered for convenience so that the application builder does not have to implement scheduling. If not set it defaults to &#39;OFF&#39;. |
-| batch_hour | [int32](#int32) |  | (Optional) This sets the hour of day that batch processing will run. It defaults to midnight.
-
-0-23 |
-
-
-
-
-
-
-<a name="oak.platform.PaymentServiceInfo"/>
-
-### PaymentServiceInfo
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| configured | [bool](#bool) |  | Status to represent whether the Configure service has been called. Financial transactions will fail unless this value is &#39;true&#39;. |
-| configuration | [PaymentConfiguration](#oak.platform.PaymentConfiguration) |  | Current value of the configuration. |
-
-
-
-
-
-
-<a name="oak.platform.SaleRequest"/>
-
-### SaleRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| sale_request | [StandardSaleRequest](#oak.platform.StandardSaleRequest) |  | This section of the request contains generic properties used by all payment providers. This accounts for the most common payment use cases. To enable or configure functionality for your specific provider, see the request section that corresponds with your provider. |
-| freedompay_request | [FreedomPayRequest](#oak.platform.FreedomPayRequest) |  | Options pertaining to FreedomPay. |
-
-
-
-
-
-
-<a name="oak.platform.SaleResponse"/>
-
-### SaleResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| provider_type | [PaymentProviderType](#oak.platform.PaymentProviderType) |  | The provider type that was selected for this sale. E.g. TEST, FREEDOMPAY, WORLDPAY, etc. |
-| response | [StandardSaleResponse](#oak.platform.StandardSaleResponse) |  | Standardized fields that will be (mostly) present in every response, regardless of payment provider. Much of the information here will also be in the provider specific response. However, your application may have an easier time switching providers at a later time if you rely on these normalized fields when possible. This is provided purely for your convenience. |
-| freedompay_response | [FreedomPayResponse](#oak.platform.FreedomPayResponse) |  | Fields specific to FreedomPay. Will be `null` if FREEDOMPAY is not the `provider_type`. |
-
-
-
-
-
-
-<a name="oak.platform.StandardSaleRequest"/>
-
-### StandardSaleRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| provider_name | [string](#string) |  | Name of one of the PaymentProviders provided in configuration. |
-| amount | [int32](#int32) |  | Amount in cents. |
-| currency | [Currency](#oak.platform.Currency) |  | Currency. Default USD. |
-| transaction_id | [string](#string) |  | (Deprecated) Transaction ID will be generated by the payment provider. This field will be ignored. |
-| store_id | [string](#string) |  | (Optional) Merchant may wish to associate the transaction with a store or location ID. |
-| terminal_id | [int32](#int32) |  | (Optional) Merchant may wish to associate the transaction with a unique ID for the kiosk, checkout counter, or other device that the customer or sales clerk may interact with. |
-| merchant_ref | [string](#string) |  | (Optional) Another field that the merchant may use to store a related ID. |
-| invoice_number | [string](#string) |  | (Optional) Number for invoice or purchase order. |
-
-
-
-
-
-
-<a name="oak.platform.StandardSaleResponse"/>
-
-### StandardSaleResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| status | [StandardSaleResponse.ResponseStatus](#oak.platform.StandardSaleResponse.ResponseStatus) |  | This is the main place to check if you want to know a high level status code on whether the request succeeded or the general category of error if one occurred. To know the specific error, check the error string, or the error fields specific to your selected provider. |
-| error | [string](#string) |  | This may contain an error message given by the provider. It will be unmodified if possible. |
-| sale_amount | [int32](#int32) |  | The sale amount you are requesting to charge the customer. |
-| currency | [Currency](#oak.platform.Currency) |  | Currency to be charged in. Default USD. |
-| masked_card_number | [string](#string) |  | May be the last 4 digits, or other format depending on the payment provider. No card numbers or personal information are retained by the Oak Payment service. A POS based solution may store personal information locally, particularly in the case of batched transactions. Please consult your provider specific documentation for more details. |
-| name_on_card | [string](#string) |  | Cardholder name. May be included by payment provider. |
-| transaction_id | [string](#string) |  | A unique transaction ID generated by the payment provider. |
-
-
-
-
-
- 
-
-
-<a name="oak.platform.Currency"/>
-
-### Currency
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| USD | 0 | default currency is USD |
-
-
-
-<a name="oak.platform.PaymentProvider.BatchInterval"/>
-
-### PaymentProvider.BatchInterval
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| OFF | 0 | Don&#39;t run batch transactions automatically. The application can still trigger them manually however. |
-| DAILY | 1 | Run batch transactions daily. |
-| WEEKLY | 2 | Run batch transactions weekly. |
-
-
-
-<a name="oak.platform.PaymentProviderType"/>
-
-### PaymentProviderType
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| TEST | 0 | Test provider. Sends an arbitrary success response unless otherwise configured. Does not talk to any payment provider or activate the physical card reader. |
-| FREEDOMPAY | 1 | FreedomPay provider. Can be configured for development and production. |
-
-
-
-<a name="oak.platform.PaymentSolutionType"/>
-
-### PaymentSolutionType
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| DEFAULT | 0 | Default should be the POS solution if it is available. Some providers may not support POS however. Check provider specific documentation to determine the default. |
-| POS | 1 | POS solution uses a local POS service, usually with a builtin queue and offline batch capabilities. These solutions are often prefered for kiosk implementations as they can continue to process transactions during network outages. |
-| CLOUD | 2 | Cloud solution uses a provider-hosted solution. This means less moving parts locally, but cannot process transactions during a network outage. |
-
-
-
-<a name="oak.platform.StandardSaleResponse.ResponseStatus"/>
-
-### StandardSaleResponse.ResponseStatus
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| INTERNAL_ERROR | 0 | something internal failed |
-| ACCEPTED | 1 | success |
-| REJECTED | 2 | insufficient funds, bad card, etc. |
-| INPUT_ERROR | 3 | bad input |
-
-
- 
-
- 
-
-
-<a name="oak.platform.Payment"/>
-
-### Payment
-Unified payment service which supports multiple payment providers.
-Current providers include:
-- TEST
-- FREEDOMPAY
-
-| Method Name | Request Type | Response Type | Description |
-| ----------- | ------------ | ------------- | ------------|
-| Info | [.google.protobuf.Empty](#google.protobuf.Empty) | [PaymentServiceInfo](#google.protobuf.Empty) | Shows whether application is running, whether it crashed if it is not running, and the time that it entered its current state. |
-| Configure | [PaymentConfiguration](#oak.platform.PaymentConfiguration) | [.google.protobuf.Empty](#oak.platform.PaymentConfiguration) | This must be run after the service starts and before running any transactions. The purpose of this service is to choose a payment provider and associated options. |
-| Sale | [SaleRequest](#oak.platform.SaleRequest) | [SaleResponse](#oak.platform.SaleRequest) | The Sale service performs an Authorization and Capture. This makes it a convenient single transaction which will perform a sale. |
-
- 
-
-
-
 <a name="touch.proto"/>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -1436,8 +841,8 @@ Current providers include:
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| calibration | [string](#string) |  | Four space-separated integers representing &lt;min-x max-x min-y max-y&gt; It is recommended that you start with extreme values, such as &#34;0 32768 0 32768&#34;, and then manually change values one axis at a time until physical touches are aligned as desired |
-| swap_axes | [bool](#bool) |  | Whether to swap the X and Y axis should be True if your touch interface is rotated LEFT or RIGHT relative to the display is overlays should be False if it is upright or inverted relative to the display it overlays |
+| calibration | [string](#string) |  | Four space-separated integers representing &lt;min-x max-x min-y max-y&gt; Use empty-string to use default calibration. Note that once calibration is changed it can only be reset to default by rebooting. It is recommended that you start with extreme values, such as &#34;0 32768 0 32768&#34;, and then manually change values one axis at a time until physical touches are aligned as desired. |
+| orientation | [TouchConfiguration.Orientation](#oak.platform.TouchConfiguration.Orientation) |  | Direction the plane of touch is oriented relative to the touch interface&#39;s upright orientation. This is configured independently of any display&#39;s orientation. FORWARD_* means facing the user as a monitor normally does BACKWARD_* means turned around (the X axis is reversed) before rotating LEFT and RIGHT mean quarter turns relative to user&#39;s perspective |
 
 
 
@@ -1492,6 +897,24 @@ Current providers include:
 
  
 
+
+<a name="oak.platform.TouchConfiguration.Orientation"/>
+
+### TouchConfiguration.Orientation
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| FORWARD_UPRIGHT | 0 |  |
+| FORWARD_LEFT | 1 |  |
+| FORWARD_RIGHT | 2 |  |
+| FORWARD_INVERTED | 3 |  |
+| BACKWARD_UPRIGHT | 4 |  |
+| BACKWARD_LEFT | 5 |  |
+| BACKWARD_RIGHT | 6 |  |
+| BACKWARD_INVERTED | 7 |  |
+
+
  
 
  
@@ -1509,105 +932,6 @@ touch devices themselves.
 | ----------- | ------------ | ------------- | ------------|
 | Info | [.google.protobuf.Empty](#google.protobuf.Empty) | [TouchInformation](#google.protobuf.Empty) | Lists touch interfaces that can be configured |
 | Configure | [TouchConfigurationRequest](#oak.platform.TouchConfigurationRequest) | [TouchConfiguration](#oak.platform.TouchConfigurationRequest) | Applies configuration to a touch interface |
-
- 
-
-
-
-<a name="webcam.proto"/>
-<p align="right"><a href="#top">Top</a></p>
-
-## webcam.proto
-
-
-
-<a name="oak.platform.JpgStream"/>
-
-### JpgStream
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| url | [string](#string) |  | The local URL where a stream can be reached. |
-
-
-
-
-
-
-<a name="oak.platform.StreamRequest"/>
-
-### StreamRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| webcam_id | [string](#string) |  |  |
-| mode | [string](#string) |  | Specifies the resolution and framerate the camera should use for this stream. Must be a value from the &#39;available_modes&#39; list for the specified webcam. |
-| port | [string](#string) |  | The port the stream should be served on. It is up to the caller to decide which available port to use. |
-
-
-
-
-
-
-<a name="oak.platform.WebcamInformation"/>
-
-### WebcamInformation
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| webcams | [WebcamInformation.Webcam](#oak.platform.WebcamInformation.Webcam) | repeated |  |
-
-
-
-
-
-
-<a name="oak.platform.WebcamInformation.Webcam"/>
-
-### WebcamInformation.Webcam
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| webcam_id | [string](#string) |  |  |
-| available_modes | [string](#string) | repeated |  |
-
-
-
-
-
- 
-
- 
-
- 
-
-
-<a name="oak.platform.Webcam"/>
-
-### Webcam
-Manage streams from webcams connected to the host.
-
-The &#39;webcam&#39; module must be activated before these RPCs are available.
-
-The ports between 9000 and 9999 inclusive are reserved for
-starting webcam streams.
-
-&#39;webcam_id&#39; values come from serial numbers reported by the
-webcams themselves.
-
-| Method Name | Request Type | Response Type | Description |
-| ----------- | ------------ | ------------- | ------------|
-| Info | [.google.protobuf.Empty](#google.protobuf.Empty) | [WebcamInformation](#google.protobuf.Empty) | Lists available webcams and the modes (resolution and framerate) they support |
-| StartStream | [StreamRequest](#oak.platform.StreamRequest) | [JpgStream](#oak.platform.StreamRequest) | A webcam can only have one stream at a time and a port can only be used for one stream at a time. |
-| StopStream | [StreamRequest](#oak.platform.StreamRequest) | [.google.protobuf.Empty](#oak.platform.StreamRequest) | Stops a previously started stream from a specified camera |
 
  
 

@@ -140,11 +140,18 @@ message ApplicationDefinition {
     string password = 3;
 
     // Environment variables to be set for just this Docker container
-    // Each string must take this form: KEY=value
-    // 'KEY' must contain only upper-case letters, digits and '_' and
-    // not start with a digit
+    // The key and values in this mapping will be the name and value
+    // of the environment variables.
+    // The key must contain only upper-case letters, digits and '_'
+    // and not start with a digit
     // 'value' can be any single-line string, quotes are not necessary
     map<string,string> environment = 4;
+
+    // Files to be mounted read-only in this Docker container
+    // This is intended for configuration and credential files
+    // The key must be an absolute path where the file should be
+    // mounted at and the value is the contents of the file.
+    map<string,bytes> assets = 5;
   }
 }
 

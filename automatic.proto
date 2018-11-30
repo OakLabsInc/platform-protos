@@ -70,6 +70,5 @@ message Configuration {
   repeated oak.platform.AudioConfigurationRequest audio = 1;
   repeated oak.platform.DisplayConfigurationRequest display = 2;
   oak.platform.DisplayGlobalConfiguration display_global = 3;
-  repeated oak.platform.WiFiConnectionSettings OBSOLETE_wifi = 4;
   repeated oak.platform.TouchConfigurationRequest touch = 5;
 }

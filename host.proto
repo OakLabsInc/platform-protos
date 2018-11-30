@@ -30,15 +30,3 @@ message HostInformation {
   string oakos_version = 4;
   string platform_version = 5;
 }
-
-message ModuleStatusList {
-  repeated ModuleStatus modules = 1;
-  message ModuleStatus {
-    string module_id = 1;
-    bool active = 2;
-  }
-}
-
-message ModuleList {
-  repeated string module_ids = 1;
-}

@@ -4,7 +4,6 @@ import "google/protobuf/empty.proto";
 
 import "audio.proto";
 import "display.proto";
-import "network.proto";
 import "touch.proto";
 
 package oak.platform;

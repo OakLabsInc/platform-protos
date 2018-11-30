@@ -4,14 +4,14 @@ import "google/protobuf/empty.proto";
 
 package oak.platform;
 
+// Configure audio devices that are connected to the host
+// Currently, only audio output devices are supported.
+//
+// Microphones are not supported.
+//
+// 'mixer_id' values come from the available ports on the host
+// device regardless of whether an audio device is connected.
 service Audio {
-  /* Configure audio devices that are connected to the host
-
-     Currently, only audio output devices are supported.
-     Microphones are not supported.
-
-     'mixer_id' values come from the available ports on the host
-     device regardless of whether an audio device is connected. */
 
   // Lists available mixers which correspond to connected audio
   // devices; also shows the current configuration, i.e. volume and

@@ -4,12 +4,12 @@ import "google/protobuf/empty.proto";
 
 package oak.platform;
 
+// View and configure host's networking settings.
+//
+// Currently, only WPA-PSK WiFi networks are supported. Wired
+// network connections cannot be altered and should be configured
+// via DHCP.
 service Network {
-  // View and configure host's networking settings.
-
-  // Currently, only WPA-PSK WiFi networks are supported. Wired
-  // network connections cannot be altered and should be configured
-  // via DHCP.
 
   // Shows network information for all Ethernet and WiFi devices,
   // including current network addresses and MAC addresses.
@@ -92,7 +92,7 @@ message NetworkManagerConfiguration {
   // networks. Each file is an .ini format file that describes a
   // network connection profile.
   // See: https://developer.gnome.org/NetworkManager/stable/nm-settings-keyfile.html
-
+  //
   // Typically, there would be one file for each network the unit
   // needs to be able to join. These files are normally generated via
   // nm-connection-editor. The recommended work-flow is to set up and

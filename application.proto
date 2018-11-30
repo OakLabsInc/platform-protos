@@ -5,24 +5,24 @@ import "google/protobuf/timestamp.proto";
 
 package oak.platform;
 
+// Manage the user's application. Application are defined by
+// docker-compose.yaml files.
+//
+// The host will hold two application versions called LIVE and
+// IDLE. Both are docker-compose.yaml files.
+//
+// The LIVE version is the version that is actually run.
+//
+// The IDLE version is a placeholder where new applications can be
+// installed.
+//
+// When a new version is installed as the IDLE version, it can then
+// be deployed by swapping the LIVE and IDLE versions. They can then
+// be swapped again to roll back if necessary.
+//
+// To DEPLOY an application, you will need to use Install and
+// SwapIdleAndLive at least.
 service Application {
-  // Manage the user's application. Application are defined by
-  // docker-compose.yaml files.
-  //
-  // The host will hold two application versions called LIVE and
-  // IDLE. Both are docker-compose.yaml files.
-  //
-  // The LIVE version is the version that is actually run.
-  //
-  // The IDLE version is a placeholder where new applications can be
-  // installed.
-  //
-  // When a new version is installed as the IDLE version, it can then
-  // be deployed by swapping the LIVE and IDLE versions. They can then
-  // be swapped again to roll back if necessary.
-  //
-  // To DEPLOY an application, you will need to use Install and
-  // SwapIdleAndLive at least.
 
   // Shows whether application is running, whether it crashed if it is
   // not running, and the time that it entered its current state.

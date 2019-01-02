@@ -14,6 +14,9 @@ service Host {
 
   // Reboots the host immediately
   rpc Reboot (google.protobuf.Empty) returns (google.protobuf.Empty) {}
+
+  // Powers off the host immediately
+  rpc PowerOff (google.protobuf.Empty) returns (google.protobuf.Empty) {}
 }
 
 message HostInformation {

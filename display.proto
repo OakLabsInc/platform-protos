@@ -6,6 +6,10 @@ package oak.platform;
 
 // Configure displays (monitors, TVs, etc) that are connected to the host
 //
+// All of the displays are configured together at once using the
+// Display.Configure RPC. Enabled displays will not overlap or
+// "mirror" each other.
+//
 // A "mode" is a string representing a resolution and framerate
 // together, e.g. "1024x768@60.00". Because values for modes must be
 // an exact text match in order to be recognized they should only be
@@ -20,28 +24,52 @@ service Display {
   // Lists displays, current configuration and supported configurations
   rpc Info (google.protobuf.Empty) returns (DisplayInformation) {}
 
-  // Applies configuration
+  // Set configuration for all displays
   rpc Configure (MultiDisplayConfiguration) returns (google.protobuf.Empty) {}
 }
 
 message DisplayInformation {
+
+  // Current configuration of all displays
   MultiDisplayConfiguration current_configuration = 1;
+
+  // Maps display_id to what modes the connected display supports
   map<string,DisplayCapabilities> display_capabilities = 2;
 
   message DisplayCapabilities {
+
+    // The "native" resolution and framerate
     string preferred_mode = 1;
+
+    // All values that will work in DisplayConfiguration.mode
     repeated string supported_modes = 2;
   }
 }
 
 message MultiDisplayConfiguration {
-  uint32 dpi = 1;  // 0 -> 96
+
+  // Dots Per Inch for all displays
+  // If 0 is specified, the default of 96 will be used
+  uint32 dpi = 1;
+
+  // Map display_id to per-display configuration
   map<string,DisplayConfiguration> displays = 2;
 }
 
 message DisplayConfiguration {
+
+  // Disables the display
+  // This does not actually "power off" the display however
   bool off = 1;
+
+  // Resolution and framerate
+  // Value should be taken from Display.Info response
+  // Use empty-string to automatically use the "preferred_mode"
   string mode = 2;
+
+  // Rotation and reflection of display image
+  // FORWARD_* means only rotating
+  // BACKWARD_* means flip on the horizontal axis before rotating
   Orientation orientation = 3;
 }
 

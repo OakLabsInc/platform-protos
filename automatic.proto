@@ -4,14 +4,14 @@ import "google/protobuf/empty.proto";
 
 import "audio.proto";
 import "display.proto";
-import "touch.proto";
+import "input.proto";
 
 package oak.platform;
 
 // Enables configuration when the Platform starts.
 //
 // This is used to make settings "permanent", such as ensuring the
-// rotation of a monitor and touch calibration after a reboot.
+// rotation of a monitor and input calibration after a reboot.
 //
 // Note that network connection settings are persisted
 // independently. See `network.proto` for more details.
@@ -69,5 +69,5 @@ message Configuration {
   repeated oak.platform.AudioConfigurationRequest audio = 1;
   repeated oak.platform.DisplayConfigurationRequest display = 2;
   oak.platform.DisplayGlobalConfiguration display_global = 3;
-  repeated oak.platform.TouchConfigurationRequest touch = 5;
+  repeated oak.platform.InputConfigurationRequest input = 5;
 }

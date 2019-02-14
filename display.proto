@@ -31,6 +31,8 @@ service Display {
   rpc Info (google.protobuf.Empty) returns (DisplayInformation) {}
 
   // Set configuration for all displays
+  // Displays not specified in the MultiDisplayConfiguration will be 
+  // turned on and set to the preferred mode.
   rpc Configure (MultiDisplayConfiguration) returns (google.protobuf.Empty) {}
 }
 

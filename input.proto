@@ -4,33 +4,33 @@ import "google/protobuf/empty.proto";
 
 package oak.platform;
 
-// Configure human touch interfaces including IR and capacitive sensors
+// Configure human input interfaces (mice and touch sensors)
 //
-// 'touch_device_id' values come from serial numbers reported by the
-// touch devices themselves.
-service Touch {
+// 'input_device_id' values come from serial numbers reported by the
+// input devices themselves.
+service Input {
 
-  // Lists touch interfaces that can be configured
-  rpc Info (google.protobuf.Empty) returns (TouchInformation) {}
+  // Lists input interfaces that can be configured
+  rpc Info (google.protobuf.Empty) returns (InputInformation) {}
 
-  // Applies configuration to a touch interface
-  rpc Configure (TouchConfigurationRequest) returns (TouchConfiguration) {}
+  // Applies configuration to a input interface
+  rpc Configure (InputConfigurationRequest) returns (InputConfiguration) {}
 }
 
-message TouchInformation {
-  repeated TouchDevice touch_devices = 1;
-  message TouchDevice {
-    string touch_device_id = 1;
-    TouchConfiguration configuration = 2;
+message InputInformation {
+  repeated InputDevice input_devices = 1;
+  message InputDevice {
+    string input_device_id = 1;
+    InputConfiguration configuration = 2;
   }
 }
 
-message TouchConfigurationRequest {
-  string touch_device_id = 1;
-  TouchConfiguration configuration = 2;
+message InputConfigurationRequest {
+  string input_device_id = 1;
+  InputConfiguration configuration = 2;
 }
 
-message TouchConfiguration {
+message InputConfiguration {
 
   // Four space-separated integers representing
   // <min-x max-x min-y max-y>
@@ -39,10 +39,10 @@ message TouchConfiguration {
   // rebooting.
   // It is recommended that you start with extreme values,
   // such as "0 32768 0 32768", and then manually change values one
-  // axis at a time until physical touches are aligned as desired.
+  // axis at a time until physical inputes are aligned as desired.
   string calibration = 1;
 
-  // Direction the plane of touch is oriented relative to the touch
+  // Direction the plane of input is oriented relative to the input
   // interface's upright orientation. This is configured independently
   // of any display's orientation.
   // FORWARD_* means facing the user as a monitor normally does

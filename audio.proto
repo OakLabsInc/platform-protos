@@ -1,3 +1,4 @@
+
 syntax = "proto3";
 
 import "google/protobuf/empty.proto";
@@ -18,27 +19,21 @@ service Audio {
   // mute settings
   // You may have to guess-and-check to determine which mixer
   // corresponds to the physical device you want to control.
-  rpc Info (google.protobuf.Empty) returns (AudioInformation) {}
+  rpc Current (google.protobuf.Empty) returns (MultiAudioConfiguration) {}
+
   // Applies configuration to an audio device, i.e. change the volume
-  rpc Configure (AudioConfigurationRequest) returns (google.protobuf.Empty) {}
+  rpc Configure (MultiAudioConfiguration) returns (google.protobuf.Empty) {}
 }
 
-message AudioInformation {
-  repeated Mixer mixers = 1;
-  message Mixer {
-    string mixer_id = 1;
-    AudioConfiguration configuration = 2;
+message MultiAudioConfiguration {
+  map<string,AudioConfiguration> mixers = 1;
+  message AudioConfiguration {
+
+    // Mutes the mixer
+    bool mute = 1;
+
+    // Must be between 0 and 100 inclusive
+    // 0 is effectively mute and 100 is maximum volume
+    uint32 volume = 2;
   }
-}
-
-message AudioConfigurationRequest {
-  string mixer_id = 1;
-  AudioConfiguration configuration = 2;
-}
-
-message AudioConfiguration {
-  bool mute = 1;
-  // Must be between 0 and 100 inclusive
-  // 0 is effectively mute and 100 is maximum volume
-  uint32 volume = 2;
 }

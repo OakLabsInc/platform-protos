@@ -11,53 +11,44 @@ package oak.platform;
 service Input {
 
   // Lists input interfaces that can be configured
-  rpc Info (google.protobuf.Empty) returns (InputInformation) {}
+  rpc Current (google.protobuf.Empty) returns (MultiInputConfiguration) {}
 
   // Applies configuration to a input interface
-  rpc Configure (InputConfigurationRequest) returns (InputConfiguration) {}
+  rpc Configure (MultiInputConfiguration) returns (google.protobuf.Empty) {}
 }
 
-message InputInformation {
-  repeated InputDevice input_devices = 1;
-  message InputDevice {
-    string input_device_id = 1;
-    InputConfiguration configuration = 2;
-  }
-}
+message MultiInputConfiguration {
+  map<string,InputConfiguration> inputs = 1;
 
-message InputConfigurationRequest {
-  string input_device_id = 1;
-  InputConfiguration configuration = 2;
-}
+  message InputConfiguration {
 
-message InputConfiguration {
+    // Four space-separated integers representing
+    // <min-x max-x min-y max-y>
+    // Use empty-string to use default calibration. Note that once
+    // calibration is changed it can only be reset to default by
+    // rebooting.
+    // It is recommended that you start with extreme values,
+    // such as "0 32768 0 32768", and then manually change values one
+    // axis at a time until physical inputes are aligned as desired.
+    string calibration = 1;
 
-  // Four space-separated integers representing
-  // <min-x max-x min-y max-y>
-  // Use empty-string to use default calibration. Note that once
-  // calibration is changed it can only be reset to default by
-  // rebooting.
-  // It is recommended that you start with extreme values,
-  // such as "0 32768 0 32768", and then manually change values one
-  // axis at a time until physical inputes are aligned as desired.
-  string calibration = 1;
+    // Direction the plane of input is oriented relative to the input
+    // interface's upright orientation. This is configured independently
+    // of any display's orientation.
+    // FORWARD_* means facing the user as a monitor normally does
+    // BACKWARD_* means turned around (the X axis is reversed) before rotating
+    // LEFT and RIGHT mean quarter turns relative to user's perspective
+    Orientation orientation = 2;
 
-  // Direction the plane of input is oriented relative to the input
-  // interface's upright orientation. This is configured independently
-  // of any display's orientation.
-  // FORWARD_* means facing the user as a monitor normally does
-  // BACKWARD_* means turned around (the X axis is reversed) before rotating
-  // LEFT and RIGHT mean quarter turns relative to user's perspective
-  Orientation orientation = 2;
-
-  enum Orientation {
-    FORWARD_UPRIGHT = 0;
-    FORWARD_LEFT = 1;
-    FORWARD_RIGHT = 2;
-    FORWARD_INVERTED = 3;
-    BACKWARD_UPRIGHT = 4;
-    BACKWARD_LEFT = 5;
-    BACKWARD_RIGHT = 6;
-    BACKWARD_INVERTED = 7;
+    enum Orientation {
+      FORWARD_UPRIGHT = 0;
+      FORWARD_LEFT = 1;
+      FORWARD_RIGHT = 2;
+      FORWARD_INVERTED = 3;
+      BACKWARD_UPRIGHT = 4;
+      BACKWARD_LEFT = 5;
+      BACKWARD_RIGHT = 6;
+      BACKWARD_INVERTED = 7;
+    }
   }
 }

@@ -27,22 +27,22 @@ package oak.platform;
 // display is plugged into e.g. "HDMI1" and "DP1".
 service Display {
 
-  // Lists displays, current configuration and supported configurations
+  // Lists displays and their supported configurations
   rpc Info (google.protobuf.Empty) returns (DisplayInformation) {}
+
+  // Shows current configuration for all displays
+  rpc Current (google.protobuf.Empty) returns (MultiDisplayConfiguration) {}
 
   // Set configuration for all displays
   // Displays not specified in the MultiDisplayConfiguration will be
-  // turned on and set to the preferred mode.
+  // turned on and set to their `preferred_mode`.
   rpc Configure (MultiDisplayConfiguration) returns (google.protobuf.Empty) {}
 }
 
 message DisplayInformation {
 
-  // Current configuration of all displays
-  MultiDisplayConfiguration current_configuration = 1;
-
   // Maps display_id to what modes the connected display supports
-  map<string,DisplayCapabilities> display_capabilities = 2;
+  map<string,DisplayCapabilities> displays = 2;
 
   message DisplayCapabilities {
 
@@ -62,32 +62,32 @@ message MultiDisplayConfiguration {
 
   // Map display_id to per-display configuration
   map<string,DisplayConfiguration> displays = 2;
-}
 
-message DisplayConfiguration {
+  message DisplayConfiguration {
 
-  // Disables the display
-  // This does not actually "power off" the display however
-  bool off = 1;
+    // Disables the display
+    // This does not actually "power off" the display however
+    bool off = 1;
 
-  // Resolution and frame-rate
-  // Value should be taken from Display.Info response
-  // Use empty-string to automatically use the "preferred_mode"
-  string mode = 2;
+    // Resolution and frame-rate
+    // Value should be taken from Display.Info response
+    // Use empty-string to automatically use the "preferred_mode"
+    string mode = 2;
 
-  // Rotation and reflection of display image
-  // FORWARD_* means only rotating
-  // BACKWARD_* means flip on the horizontal axis before rotating
-  Orientation orientation = 3;
-}
+    // Rotation and reflection of display image
+    // FORWARD_* means only rotating
+    // BACKWARD_* means flip on the horizontal axis before rotating
+    Orientation orientation = 3;
 
-enum Orientation {
-  FORWARD_UPRIGHT = 0;
-  FORWARD_LEFT = 1;
-  FORWARD_RIGHT = 2;
-  FORWARD_INVERTED = 3;
-  BACKWARD_UPRIGHT = 4;
-  BACKWARD_LEFT = 5;
-  BACKWARD_RIGHT = 6;
-  BACKWARD_INVERTED = 7;
+    enum Orientation {
+      FORWARD_UPRIGHT = 0;
+      FORWARD_LEFT = 1;
+      FORWARD_RIGHT = 2;
+      FORWARD_INVERTED = 3;
+      BACKWARD_UPRIGHT = 4;
+      BACKWARD_LEFT = 5;
+      BACKWARD_RIGHT = 6;
+      BACKWARD_INVERTED = 7;
+    }
+  }
 }

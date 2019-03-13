@@ -65,7 +65,7 @@ service Automatic {
 // The Configuration message contains configuration request messages
 // from other services. See the matching .proto files.
 message Configuration {
-  repeated oak.platform.AudioConfigurationRequest audio = 1;
+  oak.platform.MultiAudioConfiguration audio = 1;
   oak.platform.MultiDisplayConfiguration display = 2;
-  repeated oak.platform.InputConfigurationRequest input = 5;
+  oak.platform.MultiInputConfiguration input = 3;
 }

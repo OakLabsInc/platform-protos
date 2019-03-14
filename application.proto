@@ -161,8 +161,9 @@ message ApplicationSource {
 
 message LogBatch {
   message LogLine {
-    string text = 1;
+    string message = 1;
     google.protobuf.Timestamp timestamp = 2;
+    string service = 3;
   }
   repeated LogLine loglines = 1;
 }

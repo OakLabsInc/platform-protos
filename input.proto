@@ -6,18 +6,23 @@ package oak.platform;
 
 // Configure human input interfaces (mice and touch sensors)
 //
-// 'input_device_id' values come from serial numbers reported by the
+// Input IDs come from serial numbers reported by the
 // input devices themselves.
 service Input {
 
-  // Lists input interfaces that can be configured
+  // Shows configurable input interfaces and their current
+  // configurations.
   rpc Current (google.protobuf.Empty) returns (MultiInputConfiguration) {}
 
   // Applies configuration to a input interface
+  // If an input device is not present on the host, it is silently
+  // skipped.
   rpc Configure (MultiInputConfiguration) returns (google.protobuf.Empty) {}
 }
 
 message MultiInputConfiguration {
+
+  // Maps the Input ID to its configuration
   map<string,InputConfiguration> inputs = 1;
 
   message InputConfiguration {

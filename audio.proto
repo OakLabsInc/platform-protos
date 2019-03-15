@@ -1,4 +1,3 @@
-
 syntax = "proto3";
 
 import "google/protobuf/empty.proto";
@@ -10,23 +9,25 @@ package oak.platform;
 //
 // Microphones are not supported.
 //
-// 'mixer_id' values come from the available ports on the host
-// device regardless of whether an audio device is connected.
+// Mixer IDs values come from the available ports on the host device,
+// sometimes regardless of whether an audio device is connected.
 service Audio {
 
-  // Lists available mixers which correspond to connected audio
-  // devices; also shows the current configuration, i.e. volume and
-  // mute settings
-  // You may have to guess-and-check to determine which mixer
-  // corresponds to the physical device you want to control.
+  // Shows the current configuration of audio mixers.
+  // Each mixer controls the output of a different speaker.
   rpc Current (google.protobuf.Empty) returns (MultiAudioConfiguration) {}
 
-  // Applies configuration to an audio device, i.e. change the volume
+  // Applies configuration to audio mixers
+  // If a specified mixer is not present on the host, it is silently
+  // skipped.
   rpc Configure (MultiAudioConfiguration) returns (google.protobuf.Empty) {}
 }
 
 message MultiAudioConfiguration {
+
+  // Maps the Mixer ID to its configuration
   map<string,AudioConfiguration> mixers = 1;
+
   message AudioConfiguration {
 
     // Mutes the mixer

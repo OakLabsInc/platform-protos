@@ -23,7 +23,7 @@ package oak.platform;
 // mode to a display if it is not listed in that display's
 // 'available_modes'.
 //
-// 'display_id' values come from the name of the physical port the
+// Display IDs values come from the name of the physical port the
 // display is plugged into e.g. "HDMI1" and "DP1".
 service Display {
 
@@ -36,12 +36,13 @@ service Display {
   // Set configuration for all displays
   // Displays not specified in the MultiDisplayConfiguration will be
   // turned on and set to their `preferred_mode`.
+  // If a specified display is unplugged it is silently skipped.
   rpc Configure (MultiDisplayConfiguration) returns (google.protobuf.Empty) {}
 }
 
 message MultiDisplayInformation {
 
-  // Maps display_id to what modes the connected display supports
+  // Maps Display IDs to what modes the connected display supports
   map<string,DisplayCapabilities> displays = 2;
 
   message DisplayCapabilities {
@@ -60,7 +61,7 @@ message MultiDisplayConfiguration {
   // If 0 is specified, the default of 96 will be used
   uint32 dpi = 1;
 
-  // Map display_id to per-display configuration
+  // Map Display IDs to per-display configuration
   map<string,DisplayConfiguration> displays = 2;
 
   message DisplayConfiguration {

@@ -28,7 +28,7 @@ package oak.platform;
 service Display {
 
   // Lists displays and their supported configurations
-  rpc Info (google.protobuf.Empty) returns (DisplayInformation) {}
+  rpc Info (google.protobuf.Empty) returns (MultiDisplayInformation) {}
 
   // Shows current configuration for all displays
   rpc Current (google.protobuf.Empty) returns (MultiDisplayConfiguration) {}
@@ -39,7 +39,7 @@ service Display {
   rpc Configure (MultiDisplayConfiguration) returns (google.protobuf.Empty) {}
 }
 
-message DisplayInformation {
+message MultiDisplayInformation {
 
   // Maps display_id to what modes the connected display supports
   map<string,DisplayCapabilities> displays = 2;

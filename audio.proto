@@ -9,36 +9,32 @@ package oak.platform;
 //
 // Microphones are not supported.
 //
-// 'mixer_id' values come from the available ports on the host
-// device regardless of whether an audio device is connected.
+// Mixer IDs values come from the available ports on the host device,
+// sometimes regardless of whether an audio device is connected.
 service Audio {
 
-  // Lists available mixers which correspond to connected audio
-  // devices; also shows the current configuration, i.e. volume and
-  // mute settings
-  // You may have to guess-and-check to determine which mixer
-  // corresponds to the physical device you want to control.
-  rpc Info (google.protobuf.Empty) returns (AudioInformation) {}
-  // Applies configuration to an audio device, i.e. change the volume
-  rpc Configure (AudioConfigurationRequest) returns (google.protobuf.Empty) {}
+  // Shows the current configuration of audio mixers.
+  // Each mixer controls the output of a different speaker.
+  rpc Current (google.protobuf.Empty) returns (MultiAudioConfiguration) {}
+
+  // Applies configuration to audio mixers
+  // If a specified mixer is not present on the host, it is silently
+  // skipped.
+  rpc Configure (MultiAudioConfiguration) returns (google.protobuf.Empty) {}
 }
 
-message AudioInformation {
-  repeated Mixer mixers = 1;
-  message Mixer {
-    string mixer_id = 1;
-    AudioConfiguration configuration = 2;
+message MultiAudioConfiguration {
+
+  // Maps the Mixer ID to its configuration
+  map<string,AudioConfiguration> mixers = 1;
+
+  message AudioConfiguration {
+
+    // Mutes the mixer
+    bool mute = 1;
+
+    // Must be between 0 and 100 inclusive
+    // 0 is effectively mute and 100 is maximum volume
+    uint32 volume = 2;
   }
-}
-
-message AudioConfigurationRequest {
-  string mixer_id = 1;
-  AudioConfiguration configuration = 2;
-}
-
-message AudioConfiguration {
-  bool mute = 1;
-  // Must be between 0 and 100 inclusive
-  // 0 is effectively mute and 100 is maximum volume
-  uint32 volume = 2;
 }

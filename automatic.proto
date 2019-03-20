@@ -35,11 +35,8 @@ package oak.platform;
 // that message can be passed to the Store RPC. This is essentially
 // a "Save Configuration" flow.
 //
-// If there is an error in any of the configuration requests, then
-// the Apply RPC will stop executing at that point. When the cause
-// of the issue is fixed, such as if a missing hardware component
-// was reconnected, then the Apply endpoint can be called again to
-// retry the automatic configuration.
+// If any errors are returned by RPCs to the Apply RPC, the error
+// messages are collected and return as an error from the Apply RPC.
 service Automatic {
 
   // Stores a Configuration for automatic application on start-up
@@ -65,7 +62,13 @@ service Automatic {
 // The Configuration message contains configuration request messages
 // from other services. See the matching .proto files.
 message Configuration {
-  repeated oak.platform.AudioConfigurationRequest audio = 1;
+
+  // Message to be sent to Audio.Configure RPC
+  oak.platform.MultiAudioConfiguration audio = 1;
+
+  // Message to be sent to Display.Configure RPC
   oak.platform.MultiDisplayConfiguration display = 2;
-  repeated oak.platform.InputConfigurationRequest input = 5;
+
+  // Message to be sent to Input.Configure RPC
+  oak.platform.MultiInputConfiguration input = 3;
 }

@@ -47,11 +47,8 @@ service Application {
   // /dev/nvidiactl
   rpc Install (ApplicationDefinition) returns (stream InstallStatus) {}
 
-  // Shows the IDLE version docker-compose.yaml.
-  rpc ViewIdle (google.protobuf.Empty) returns (ApplicationSource) {}
-
-  // Shows the LIVE version docker-compose.yaml.
-  rpc ViewLive (google.protobuf.Empty) returns (ApplicationSource) {}
+  // Shows both the LIVE and IDLE versions' docker-compose.yaml.
+  rpc View (google.protobuf.Empty) returns (ApplicationSources) {}
 
   // Stops the application (if not already stopped), switches the LIVE
   // and IDLE versions, and then starts the application using the new
@@ -155,8 +152,9 @@ message ApplicationDefinition {
   }
 }
 
-message ApplicationSource {
-  string docker_compose_yaml = 1;
+message ApplicationSources {
+  string live_docker_compose_yaml = 1;
+  string idle_docker_compose_yaml = 2;
 }
 
 message LogBatch {

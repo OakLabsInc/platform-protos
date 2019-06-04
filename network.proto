@@ -25,7 +25,7 @@ service Network {
   rpc AddWiFi (WiFiConnectionSettings) returns (google.protobuf.Empty) {}
 
   // Adds or overwrites configuration for adding a static IP
-  rpc AddWiFi (StaticConnectionSettings) returns (google.protobuf.Empty) {}
+  rpc AddStaticConnection (StaticConnectionSettings) returns (google.protobuf.Empty) {}
 
   // Removes stored WiFi configuration.
   rpc ForgetWiFi (WiFiConnectionSettings) returns (google.protobuf.Empty) {}

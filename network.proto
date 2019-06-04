@@ -24,6 +24,9 @@ service Network {
   // until `ForgetWifi` is used.
   rpc AddWiFi (WiFiConnectionSettings) returns (google.protobuf.Empty) {}
 
+  // Adds or overwrites configuration for adding a static IP
+  rpc AddWiFi (StaticConnectionSettings) returns (google.protobuf.Empty) {}
+
   // Removes stored WiFi configuration.
   rpc ForgetWiFi (WiFiConnectionSettings) returns (google.protobuf.Empty) {}
 
@@ -80,6 +83,19 @@ message WiFiConnectionSettings {
 
   // 'passphrase' will be stored securely and CANNOT be viewed.
   string passphrase = 2;
+}
+
+message StaticConnectionSettings {
+
+  // address in slash notation
+  string address = 1;
+  
+  // default gateway for the connection
+  string gateway = 2;
+
+  // nameservers to use for the connection
+  string nameserver = 3;
+
 }
 
 message WiFiNetworkList {
